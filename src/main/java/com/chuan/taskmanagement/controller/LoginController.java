@@ -1,8 +1,11 @@
 package com.chuan.taskmanagement.controller;
 
 import com.chuan.taskmanagement.dto.LoginRequest;
+import com.chuan.taskmanagement.exception.ServiceAppException;
 import com.chuan.taskmanagement.security.JwtUtills;
+import com.chuan.taskmanagement.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,25 +20,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Validated
 @RequestMapping(path = "auth")
-public class TaskController {
+public class LoginController {
 
     @Autowired
-    private JwtUtills utills;
+    private JwtUtills utils;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/test")
+    @Autowired
+    private UserServiceImpl userService;
 
+    @PostMapping("/test")
     public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("Test");
+        throw new ServiceAppException(HttpStatus.BAD_REQUEST, "TEST");
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = utills.generateJwtToken(authentication);
+        String jwt = utils.generateJwtToken(authentication);
         return ResponseEntity.ok(jwt);
     }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<?> singUp(@RequestBody LoginRequest loginRequest) {
+        userService.addUser(loginRequest.getUsername(), loginRequest.getPassword());
+        return ResponseEntity.ok("SIGN UP");
+    }
+
+    //TODO oauth
 }

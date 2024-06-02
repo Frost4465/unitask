@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+    //https://medium.com/@minadev/authentication-and-authorization-with-spring-security-bf22e985f2cb
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -55,7 +57,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

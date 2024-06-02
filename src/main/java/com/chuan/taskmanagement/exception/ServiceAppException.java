@@ -8,7 +8,6 @@ public class ServiceAppException extends AuthenticationException {
     private static final long serialVersionUID = 1L;
     private final int serviceAppStatus;
     private Object[] messageArgs;
-    private boolean useErrorMessage = true;
 
     public ServiceAppException(HttpStatus httpStatus, String message) {
         super(message);
@@ -34,13 +33,6 @@ public class ServiceAppException extends AuthenticationException {
         this.messageArgs = messageArgs;
     }
 
-    public ServiceAppException(HttpStatus httpStatus, String message, Boolean useErrorMessage, Object... messageArgs) {
-        super(message);
-        this.serviceAppStatus = httpStatus.value();
-        this.messageArgs = messageArgs;
-        this.useErrorMessage = useErrorMessage;
-    }
-
     public ServiceAppException(int serviceAppStatus, String message, Throwable cause) {
         super(message, cause);
         this.serviceAppStatus = serviceAppStatus;
@@ -59,10 +51,6 @@ public class ServiceAppException extends AuthenticationException {
 
     public Object[] getMessageArgs() {
         return messageArgs;
-    }
-
-    public boolean getUseErrorMessage() {
-        return this.useErrorMessage;
     }
 }
 

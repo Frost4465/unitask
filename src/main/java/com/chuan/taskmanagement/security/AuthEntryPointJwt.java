@@ -1,24 +1,29 @@
 package com.chuan.taskmanagement.security;
 
-import jakarta.servlet.ServletException;
+import com.chuan.taskmanagement.exception.ServiceAppException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
 @Slf4j
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
+    @Qualifier("handlerExceptionResolver")
+    @Autowired
+    private HandlerExceptionResolver resolver;
+
+    //https://stackoverflow.com/questions/19767267/handle-spring-security-authentication-exceptions-with-exceptionhandler
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
-
-        log.error("Unauthorized Error : {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "test");
+                         AuthenticationException authException) {
+        resolver.resolveException(request, response, null, authException);
     }
 }

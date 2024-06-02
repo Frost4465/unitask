@@ -1,12 +1,12 @@
 package com.chuan.taskmanagement.exception;
 
-import com.chuan.taskmanagement.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestAttributes;
@@ -14,10 +14,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
+import java.util.HashMap;
+
 @Slf4j
 @RequiredArgsConstructor
 @ControllerAdvice
-public class ServiceAppExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     private String getI18nMessage(String code, String fallbackCode, WebRequest request, Object... args) {
@@ -39,16 +41,20 @@ public class ServiceAppExceptionHandler extends ResponseEntityExceptionHandler {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
         }
 
-        if (ex.getUseErrorMessage()) {
-            final String i18nMessage = getI18nMessage(ex.getMessage(), "atfApp.handleServiceAppException.fallback",
-                    request, ex.getMessageArgs());
-            return ResponseEntity.status(httpStatus).body(new ResponseEntity(new ResponseDto(i18nMessage, ex.getMessage(), httpStatus), httpStatus));
-        } else {
-            if (ex.getMessageArgs().length > 1) {
-                return ResponseEntity.status(httpStatus).body(new ResponseEntity(new ResponseDto(ex.getMessageArgs(), ex.getMessage(), httpStatus), httpStatus));
-            } else {
-                return ResponseEntity.status(httpStatus).body(new ResponseEntity(new ResponseDto(ex.getMessageArgs()[0], ex.getMessage(), httpStatus), httpStatus));
-            }
-        }
+        final String i18nMessage = getI18nMessage(ex.getMessage(), "ServiceAppException.noMessage",
+                request, ex.getMessageArgs());
+        HashMap<String, String> errorMessage = new HashMap<>();
+        errorMessage.put("ErrorCode", ex.getMessage());
+        errorMessage.put("ErrorMessage", i18nMessage);
+        return ResponseEntity.status(httpStatus).body(new ResponseEntity(errorMessage, httpStatus));
+    }
+
+    @ExceptionHandler(value = {AuthenticationException.class})
+    protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        HashMap<String, String> errorMessage = new HashMap<>();
+        errorMessage.put("ErrorCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        errorMessage.put("ErrorMessage", ex.getMessage());
+        return ResponseEntity.status(httpStatus).body(new ResponseEntity(errorMessage, httpStatus));
     }
 }
