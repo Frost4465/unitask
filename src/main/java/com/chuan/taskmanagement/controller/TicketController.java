@@ -1,7 +1,7 @@
 package com.chuan.taskmanagement.controller;
 
-import com.chuan.taskmanagement.dto.CreateTicketRequest;
-import com.chuan.taskmanagement.dto.UpdateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
 import com.chuan.taskmanagement.service.TickerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +41,9 @@ public class TicketController {
         return ResponseEntity.ok("Ticket deleted");
     }
 
-    @GetMapping("/ticketList")
-    public ResponseEntity<?> ticketList() {
-        return ResponseEntity.ok(ticketService.ticketList());
+    @GetMapping("/ticketList/{id}")
+    public ResponseEntity<?> ticketList(@Valid @PathVariable("id") Long id) {
+        return ResponseEntity.ok(ticketService.projectTicketList(id));
     }
 
 }

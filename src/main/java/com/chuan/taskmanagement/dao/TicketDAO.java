@@ -21,7 +21,7 @@ public class TicketDAO {
         return ticketRepository.findById(id).orElse(null);
     }
 
-    public List<Ticket> findAll() {
-        return ticketRepository.getTicketList();
+    public List<Ticket> findByProjectId(Long id) {
+        return ticketRepository.getTicketList(id);
     }
 }

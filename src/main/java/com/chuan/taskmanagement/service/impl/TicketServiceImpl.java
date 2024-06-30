@@ -1,15 +1,16 @@
 package com.chuan.taskmanagement.service.impl;
 
 import com.chuan.taskmanagement.dao.AppUserDAO;
+import com.chuan.taskmanagement.dao.ProjectDAO;
 import com.chuan.taskmanagement.dao.TicketDAO;
-import com.chuan.taskmanagement.dto.CreateTicketRequest;
-import com.chuan.taskmanagement.dto.UpdateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Ticket;
 import com.chuan.taskmanagement.exception.ServiceAppException;
 import com.chuan.taskmanagement.service.BaseService;
 import com.chuan.taskmanagement.service.TickerService;
-import com.chuan.taskmanagement.vo.Ticket.TicketVO;
+import com.chuan.taskmanagement.vo.ticket.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class TicketServiceImpl implements TickerService {
     private AppUserDAO appUserDAO;
     @Autowired
     private TicketDAO ticketDAO;
+    @Autowired
+    private ProjectDAO projectDAO;
 
     @Override
     public void createTicket(CreateTicketRequest ticketRequest) {
@@ -80,8 +83,9 @@ public class TicketServiceImpl implements TickerService {
     }
 
     @Override
-    public List<TicketVO> ticketList() {
-        return ticketDAO.findAll().stream().map(ticket -> {
+    public List<TicketVO> projectTicketList(Long id) {
+        List<Ticket> ticketList = ticketDAO.findByProjectId(id);
+        return ticketList.stream().map(ticket -> {
             return TicketVO.builder()
                     .id(ticket.getId())
                     .title(ticket.getTitle())

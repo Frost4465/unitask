@@ -1,8 +1,8 @@
 package com.chuan.taskmanagement.service;
 
-import com.chuan.taskmanagement.dto.CreateTicketRequest;
-import com.chuan.taskmanagement.dto.UpdateTicketRequest;
-import com.chuan.taskmanagement.vo.Ticket.TicketVO;
+import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
+import com.chuan.taskmanagement.vo.ticket.TicketVO;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface TickerService {
 
     void deleteTicket(Long ticketId);
 
-    List<TicketVO> ticketList();
+    List<TicketVO> projectTicketList(Long id);
 }

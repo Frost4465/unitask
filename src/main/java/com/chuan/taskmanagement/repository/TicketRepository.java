@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM ticket WHERE is_deleted = 0")
-    List<Ticket> getTicketList();
+    @Query(nativeQuery = true, value = "SELECT * FROM ticket t WHERE t.is_deleted = 0 && t.project.id = :id ")
+    List<Ticket> getTicketList(Long id);
 }

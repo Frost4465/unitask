@@ -6,34 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
-@Table(name = "ticket")
+@Table(name = "project")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket extends BaseEntity {
+public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String title;
+    private String name;
     @Column
     private String description;
+    @ElementCollection
     @Column
-    private String status;
-    @Column
-    private Integer storyPoints;
+    private List<String> members;
     @Column(columnDefinition = "tinyint(0) default 0")
     private boolean isDeleted;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id")
-    private AppUser author;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_person_id")
-    private AppUser assignedPerson;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Project project;
-
 }
