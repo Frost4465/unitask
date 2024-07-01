@@ -16,9 +16,10 @@ public class UserServiceImpl {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void addUser(String username, String password) {
+    public void addUser(String username, String password, String name) {
         AppUser appUser = new AppUser();
         appUser.setEmail(username);
+        appUser.setName(name);
         appUser.setPassword(passwordEncoder.encode(password));
         appUser.setRole("ADMIN");
         userRepository.save(appUser);

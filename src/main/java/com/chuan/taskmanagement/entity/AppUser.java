@@ -19,6 +19,8 @@ public class AppUser {
     private Long Id;
     @Column(nullable = false, unique = true)
     private String email;
+    @Column
+    private String name;
     @Column(nullable = false, unique = true)
     private String password;
     private String role;

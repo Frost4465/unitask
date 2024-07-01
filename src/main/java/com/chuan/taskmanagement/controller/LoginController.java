@@ -46,7 +46,7 @@ public class LoginController {
 
     @PostMapping("/signUp")
     public ResponseEntity<?> singUp(@RequestBody LoginRequest loginRequest) {
-        userService.addUser(loginRequest.getUsername(), loginRequest.getPassword());
+        userService.addUser(loginRequest.getUsername(), loginRequest.getPassword(), loginRequest.getName());
         return ResponseEntity.ok("SIGN UP");
     }
 
