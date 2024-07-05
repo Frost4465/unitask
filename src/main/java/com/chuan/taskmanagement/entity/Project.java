@@ -23,6 +23,9 @@ public class Project extends BaseEntity {
     private String name;
     @Column
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser leader;
     @ElementCollection
     @Column
     private List<String> members;

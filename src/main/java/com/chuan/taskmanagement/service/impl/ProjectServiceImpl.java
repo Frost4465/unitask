@@ -2,13 +2,20 @@ package com.chuan.taskmanagement.service.impl;
 
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dao.ProjectDAO;
+import com.chuan.taskmanagement.dto.BaseViewOption;
 import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
+import com.chuan.taskmanagement.dto.project.ProjectResponse;
+import com.chuan.taskmanagement.dto.project.ProjectTuples;
 import com.chuan.taskmanagement.dto.project.UpdateProjectRequest;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Project;
 import com.chuan.taskmanagement.exception.ServiceAppException;
+import com.chuan.taskmanagement.mapper.ProjectMapper;
 import com.chuan.taskmanagement.service.ProjectService;
+import com.chuan.taskmanagement.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +29,8 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDAO projectDAO;
     @Autowired
     private AppUserDAO appUserDAO;
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Override
     public void createProject(CreateProjectRequest projectRequest) {
@@ -49,7 +58,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
-    private void checkUserExists(List<String> users){
+    private void checkUserExists(List<String> users) {
         if (!CollectionUtils.isEmpty(users)) {
             List<AppUser> appUserList = appUserDAO.findAllByEmail(users);
             if (appUserList.size() != users.size()) {
@@ -58,5 +67,14 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
+    @Override
+    public Page<ProjectTuples> listProject(BaseViewOption baseViewOption) {
+        Pageable pageable = PageUtil.getPage(baseViewOption);
+        return projectDAO.list(pageable);
+    }
 
+    @Override
+    public ProjectResponse readProject(Long id) {
+        return projectMapper.toResponse(projectDAO.findById(id));
+    }
 }
