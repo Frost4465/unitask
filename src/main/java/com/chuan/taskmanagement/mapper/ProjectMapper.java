@@ -35,6 +35,16 @@ public class ProjectMapper {
         return projectResponse;
     }
 
+    public DropdownResponse toDropdown(Project project) {
+        if (Objects.isNull(project)) {
+            return null;
+        }
+        DropdownResponse dropdownResponse = new DropdownResponse();
+        dropdownResponse.setId(project.getId());
+        dropdownResponse.setLabel(project.getName());
+        return dropdownResponse;
+    }
+
     public List<DropdownResponse> toDropdown(Collection<ProjectMember> projectMembers) {
         if (CollectionUtils.isEmpty(projectMembers)) {
             return null;

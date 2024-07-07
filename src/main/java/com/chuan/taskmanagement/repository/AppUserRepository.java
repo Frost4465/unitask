@@ -14,9 +14,6 @@ import java.util.Optional;
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByEmail(String email);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM app_user where email in :email")
-    List<AppUser> findAllByEmail(List<String> email);
-
     @Query("SELECT user FROM AppUser user " +
             "WHERE user.Id IN :ids ")
     List<AppUser> findAllByIds(@Param("ids") Collection<Long> ids);

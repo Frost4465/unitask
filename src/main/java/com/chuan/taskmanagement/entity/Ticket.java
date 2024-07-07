@@ -1,5 +1,6 @@
 package com.chuan.taskmanagement.entity;
 
+import com.chuan.taskmanagement.constant.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +18,17 @@ public class Ticket extends AuditedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private String title;
+
     @Column
     private String description;
+
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
+
     @Column
     private Integer storyPoints;
 

@@ -1,13 +1,15 @@
 package com.chuan.taskmanagement.controller;
 
-import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
-import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.TicketBoardResponse;
+import com.chuan.taskmanagement.dto.ticket.TicketRequest;
 import com.chuan.taskmanagement.service.TickerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Validated
@@ -18,20 +20,20 @@ public class TicketController {
     private TickerService ticketService;
 
     @PostMapping("/createTicket")
-    public ResponseEntity<?> createTicket(@Valid @RequestBody CreateTicketRequest ticketRequest) {
+    public ResponseEntity<?> createTicket(@Valid @RequestBody TicketRequest ticketRequest) {
         ticketService.createTicket(ticketRequest);
         return ResponseEntity.ok("Ticket created");
     }
 
-    @PutMapping("/updateTicket")
-    public ResponseEntity<?> updateTicket(@Valid @RequestBody UpdateTicketRequest updateTicketRequest) {
-        ticketService.updateTicket(updateTicketRequest);
+    @PutMapping("/updateTicket/{id}")
+    public ResponseEntity<?> updateTicket(@PathVariable("id") Long id, @Valid @RequestBody TicketRequest updateTicketRequest) {
+        ticketService.updateTicket(id, updateTicketRequest);
         return ResponseEntity.ok("Ticket updated");
     }
 
-    @GetMapping("/getTicket/{ticketId}")
-    public ResponseEntity<?> getTicket(@Valid @PathVariable("ticketId") Long ticketId) {
-        return ResponseEntity.ok(ticketService.getTicket(ticketId));
+    @GetMapping("/getTicket/{id}")
+    public ResponseEntity<?> getTicket(@Valid @PathVariable("id") Long id) {
+        return ResponseEntity.ok(ticketService.getTicket(id));
     }
 
     @DeleteMapping("/deleteTicket/{ticketId}")
@@ -41,7 +43,7 @@ public class TicketController {
     }
 
     @GetMapping("/ticketList/{id}")
-    public ResponseEntity<?> ticketList(@Valid @PathVariable("id") Long id) {
+    public ResponseEntity<List<TicketBoardResponse>> ticketList(@Valid @PathVariable("id") Long id) {
         return ResponseEntity.ok(ticketService.projectTicketList(id));
     }
 

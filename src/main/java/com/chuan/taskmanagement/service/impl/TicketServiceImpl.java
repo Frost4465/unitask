@@ -3,19 +3,20 @@ package com.chuan.taskmanagement.service.impl;
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dao.ProjectDAO;
 import com.chuan.taskmanagement.dao.TicketDAO;
-import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
-import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
+import com.chuan.taskmanagement.dto.ticket.TicketBoardResponse;
+import com.chuan.taskmanagement.dto.ticket.TicketRequest;
+import com.chuan.taskmanagement.dto.ticket.TicketResponse;
+import com.chuan.taskmanagement.dto.ticket.TicketTuple;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Project;
 import com.chuan.taskmanagement.entity.Ticket;
+import com.chuan.taskmanagement.mapper.TicketMapper;
 import com.chuan.taskmanagement.service.ContextService;
 import com.chuan.taskmanagement.service.TickerService;
-import com.chuan.taskmanagement.vo.ticket.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TicketServiceImpl extends ContextService implements TickerService {
@@ -26,9 +27,11 @@ public class TicketServiceImpl extends ContextService implements TickerService {
     private TicketDAO ticketDAO;
     @Autowired
     private ProjectDAO projectDAO;
+    @Autowired
+    private TicketMapper ticketMapper;
 
     @Override
-    public void createTicket(CreateTicketRequest ticketRequest) {
+    public void createTicket(TicketRequest ticketRequest) {
         AppUser assignedAppUser = appUserDAO.findById(ticketRequest.getAssignedId());
         AppUser authorAppUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Project project = projectDAO.findById(ticketRequest.getProjectId());
@@ -44,34 +47,21 @@ public class TicketServiceImpl extends ContextService implements TickerService {
     }
 
     @Override
-    public void updateTicket(UpdateTicketRequest ticketRequest) {
-//        Ticket ticket = ticketDAO.findById(ticketRequest.getTicketId());
-//        AppUser assignedAppUser = appUserDAO.findByEmail(ticketRequest.getAssigned());
-//        if (ticket == null) {
-//            throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Ticket Does Not Exists");
-//        }
-//        ticket.setTitle(ticket.getTitle());
-//        ticket.setDescription(ticketRequest.getDescription());
-//        ticket.setStatus(ticket.getStatus());
-//        ticket.setStoryPoints(ticketRequest.getStoryPoints());
-//        if (assignedAppUser != null) {
-//            ticket.setAssignedPerson(assignedAppUser);
-//        }
-//        ticketDAO.save(ticket);
+    public void updateTicket(Long id, TicketRequest ticketRequest) {
+        AppUser assignedAppUser = appUserDAO.findById(ticketRequest.getAssignedId());
+        Ticket ticket = ticketDAO.findById(id);
+        ticket.setTitle(ticketRequest.getTitle());
+        ticket.setDescription(ticketRequest.getDescription());
+        ticket.setStatus(ticketRequest.getStatus());
+        ticket.setStoryPoints(ticketRequest.getStoryPoints());
+        ticket.setAssignedPerson(assignedAppUser);
+        ticketDAO.save(ticket);
     }
 
     @Override
-    public TicketVO getTicket(Long ticketId) {
-        return null;
-//        Ticket ticket = ticketDAO.findById(ticketId);
-//        return TicketVO.builder()
-//                .id(ticket.getId())
-//                .title(ticket.getTitle())
-//                .description(ticket.getDescription())
-//                .status(ticket.getStatus())
-//                .author(ticket.getAuthor() != null ? ticket.getAuthor().getEmail() : null)
-//                .assignedPerson(ticket.getAssignedPerson() != null ? ticket.getAssignedPerson().getEmail() : null)
-//                .build();
+    public TicketResponse getTicket(Long ticketId) {
+        Ticket ticket = ticketDAO.findById(ticketId);
+        return ticketMapper.toResponse(ticket);
     }
 
     @Override
@@ -81,19 +71,8 @@ public class TicketServiceImpl extends ContextService implements TickerService {
     }
 
     @Override
-    public List<TicketVO> projectTicketList(Long id) {
-        List<Ticket> ticketList = ticketDAO.findByProjectId(id);
-        return ticketList.stream().map(ticket -> {
-            return TicketVO.builder()
-                    .id(ticket.getId())
-                    .title(ticket.getTitle())
-                    .description(ticket.getDescription())
-                    .status(ticket.getStatus())
-                    .author(ticket.getAuthor() != null ? ticket.getAuthor().getEmail() : null)
-                    .assignedPerson(ticket.getAssignedPerson() != null ? ticket.getAssignedPerson().getEmail() : null)
-                    .build();
-        }).collect(Collectors.toList());
+    public List<TicketBoardResponse> projectTicketList(Long id) {
+        List<TicketTuple> ticketList = ticketDAO.findByProjectId(id);
+        return ticketMapper.toResponse(ticketList);
     }
-
-
 }

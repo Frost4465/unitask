@@ -1,6 +1,6 @@
 package com.chuan.taskmanagement.dto.project;
 
-public interface ProjectTuples {
+public interface ProjectTuple {
 
     Long getId();
 

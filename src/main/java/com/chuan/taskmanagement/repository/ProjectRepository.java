@@ -1,6 +1,6 @@
 package com.chuan.taskmanagement.repository;
 
-import com.chuan.taskmanagement.dto.project.ProjectTuples;
+import com.chuan.taskmanagement.dto.project.ProjectTuple;
 import com.chuan.taskmanagement.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "FROM Project p " +
             "LEFT JOIN p.leader leader " +
             "WHERE :search IS NULL or p.name LIKE :search ")
-    Page<ProjectTuples> list(Pageable pageable, @Param("search") String search);
+    Page<ProjectTuple> list(Pageable pageable, @Param("search") String search);
 
     @Query("select p from Project p where p.code = :code")
     Optional<Project> findByCode(@Param("code") String code);

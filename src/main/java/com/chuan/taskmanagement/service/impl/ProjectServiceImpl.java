@@ -7,7 +7,7 @@ import com.chuan.taskmanagement.dto.PageRequest;
 import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.ProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
-import com.chuan.taskmanagement.dto.project.ProjectTuples;
+import com.chuan.taskmanagement.dto.project.ProjectTuple;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Project;
 import com.chuan.taskmanagement.entity.ProjectMember;
@@ -67,9 +67,9 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     }
 
     @Override
-    public void updateProject(ProjectRequest request) {
+    public void updateProject(Long id,ProjectRequest request) {
 
-        Project project = projectDAO.findById(request.getId());
+        Project project = projectDAO.findById(id);
         List<AppUser> members = appUserDAO.findByIds(request.getParticipantIds());
         AppUser leader = appUserDAO.findById(request.getLeadId());
 
@@ -102,7 +102,7 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     }
 
     @Override
-    public PageResponse<ProjectTuples> listProject(PageRequest pageRequest) {
+    public PageResponse<ProjectTuple> listProject(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
         String likeSearch = PageUtil.likeSearch(pageRequest.getSearchQuery());
         return new PageResponse<>(projectDAO.list(pageable, likeSearch));

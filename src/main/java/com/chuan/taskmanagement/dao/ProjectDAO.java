@@ -1,7 +1,7 @@
 package com.chuan.taskmanagement.dao;
 
 import com.chuan.taskmanagement.constant.ProjectErrorConstant;
-import com.chuan.taskmanagement.dto.project.ProjectTuples;
+import com.chuan.taskmanagement.dto.project.ProjectTuple;
 import com.chuan.taskmanagement.entity.Project;
 import com.chuan.taskmanagement.exception.ServiceAppException;
 import com.chuan.taskmanagement.repository.ProjectRepository;
@@ -38,7 +38,7 @@ public class ProjectDAO {
         return projectRepository.findByCode(key).isPresent();
     }
 
-    public Page<ProjectTuples> list(Pageable pageable, String search) {
+    public Page<ProjectTuple> list(Pageable pageable, String search) {
         return projectRepository.list(pageable, search);
     }
 }

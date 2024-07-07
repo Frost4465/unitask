@@ -1,6 +1,7 @@
 package com.chuan.taskmanagement.service.impl;
 
 import com.chuan.taskmanagement.constant.AuthErrorConstant;
+import com.chuan.taskmanagement.constant.UserErrorConstant;
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dto.DropdownResponse;
 import com.chuan.taskmanagement.dto.user.ProfileRequest;
@@ -32,6 +33,10 @@ public class UserServiceImpl extends ContextService implements UserService {
 
     @Override
     public void addUser(String username, String password, String name) {
+        if (appUserDAO.findOptionalByEmail(username).isPresent()) {
+            throw new ServiceAppException(HttpStatus.BAD_REQUEST, UserErrorConstant.EXISTS);
+        }
+
         AppUser appUser = new AppUser();
         appUser.setEmail(username);
         appUser.setName(name);

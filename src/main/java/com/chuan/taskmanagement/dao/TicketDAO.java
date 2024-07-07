@@ -1,8 +1,12 @@
 package com.chuan.taskmanagement.dao;
 
+import com.chuan.taskmanagement.constant.TicketErrorConstant;
+import com.chuan.taskmanagement.dto.ticket.TicketTuple;
 import com.chuan.taskmanagement.entity.Ticket;
+import com.chuan.taskmanagement.exception.ServiceAppException;
 import com.chuan.taskmanagement.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +33,10 @@ public class TicketDAO {
     }
 
     public Ticket findById(Long id) {
-        return ticketRepository.findById(id).orElse(null);
+        return ticketRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, TicketErrorConstant.NOT_FOUND));
     }
 
-    public List<Ticket> findByProjectId(Long id) {
+    public List<TicketTuple> findByProjectId(Long id) {
         return ticketRepository.getTicketList(id);
     }
 }

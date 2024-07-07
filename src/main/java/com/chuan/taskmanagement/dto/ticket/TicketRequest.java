@@ -1,21 +1,20 @@
 package com.chuan.taskmanagement.dto.ticket;
 
-import jakarta.validation.constraints.Email;
+import com.chuan.taskmanagement.constant.TicketStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
 @Data
-public class CreateTicketRequest {
+public class TicketRequest {
 
     @NotNull
     private String title;
     @NotNull
     private String description;
-    private String status;
+    private TicketStatus status;
     private Integer storyPoints;
     private Long projectId;
-    @Email
     private Long assignedId;
 
 }

@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class AppUserDAO {
@@ -27,12 +24,13 @@ public class AppUserDAO {
         return appUserRepository.save(appUser);
     }
 
-    public AppUser findByEmail(String email) {
-        return appUserRepository.findByEmail(email).orElse(null);
+    public Optional<AppUser> findOptionalByEmail(String email) {
+        return appUserRepository.findByEmail(email);
     }
 
-    public List<AppUser> findAllByEmail(List<String> emailList) {
-        return appUserRepository.findAllByEmail(emailList);
+    public AppUser findByEmail(String email) {
+        return appUserRepository.findByEmail(email).orElseThrow(() ->
+                new ServiceAppException(HttpStatus.BAD_REQUEST, UserErrorConstant.NOT_FOUND));
     }
 
     public List<AppUser> findAll() {
@@ -40,6 +38,9 @@ public class AppUserDAO {
     }
 
     public AppUser findById(Long id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return appUserRepository.findById(id).orElseThrow(() ->
                 new ServiceAppException(HttpStatus.BAD_REQUEST, UserErrorConstant.NOT_FOUND));
     }

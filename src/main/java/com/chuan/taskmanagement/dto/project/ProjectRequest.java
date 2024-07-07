@@ -11,7 +11,6 @@ import java.util.Collection;
 @Valid
 public class ProjectRequest {
 
-    private Long id;
     @NotNull
     private String name;
     private String description;
