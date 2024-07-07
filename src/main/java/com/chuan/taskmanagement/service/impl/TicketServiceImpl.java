@@ -72,8 +72,7 @@ public class TicketServiceImpl extends ContextService implements TickerService {
     @Override
     public void deleteTicket(Long ticketId) {
         Ticket ticket = ticketDAO.findById(ticketId);
-        ticket.setDeleted(true);
-        ticketDAO.save(ticket);
+        ticketDAO.delete(ticket);
     }
 
     @Override

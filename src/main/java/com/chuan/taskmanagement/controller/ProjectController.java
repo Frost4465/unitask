@@ -2,10 +2,9 @@ package com.chuan.taskmanagement.controller;
 
 import com.chuan.taskmanagement.dto.PageRequest;
 import com.chuan.taskmanagement.dto.PageResponse;
-import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
+import com.chuan.taskmanagement.dto.project.ProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuples;
-import com.chuan.taskmanagement.dto.project.UpdateProjectRequest;
 import com.chuan.taskmanagement.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,14 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping("/createProject")
-    public ResponseEntity<String> createTicket(@Valid @RequestBody CreateProjectRequest projectRequest) {
+    public ResponseEntity<String> createTicket(@Valid @RequestBody ProjectRequest projectRequest) {
         projectService.createProject(projectRequest);
         return ResponseEntity.ok("Project created");
     }
 
     @PutMapping("/updateProject")
-    public ResponseEntity<String> updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest) {
-        projectService.updateProject(updateProjectRequest);
+    public ResponseEntity<String> updateProject(@Valid @RequestBody ProjectRequest projectRequest) {
+        projectService.updateProject(projectRequest);
         return ResponseEntity.ok("Project updated");
     }
 

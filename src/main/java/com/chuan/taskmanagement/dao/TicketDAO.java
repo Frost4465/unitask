@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TicketDAO {
@@ -13,8 +14,18 @@ public class TicketDAO {
     @Autowired
     private TicketRepository ticketRepository;
 
-    public void save(Ticket ticket) {
-        ticketRepository.save(ticket);
+    public Ticket save(Ticket ticket) {
+        if (Objects.isNull(ticket)) {
+            return null;
+        }
+        return ticketRepository.save(ticket);
+    }
+
+    public void delete(Ticket ticket) {
+        if (Objects.isNull(ticket)) {
+            return;
+        }
+        ticketRepository.delete(ticket);
     }
 
     public Ticket findById(Long id) {

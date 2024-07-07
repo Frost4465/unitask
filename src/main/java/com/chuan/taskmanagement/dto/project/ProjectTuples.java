@@ -6,5 +6,7 @@ public interface ProjectTuples {
 
     String getName();
 
+    String getCode();
+
     String getLeaderName();
 }

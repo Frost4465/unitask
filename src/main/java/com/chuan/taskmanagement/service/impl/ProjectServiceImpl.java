@@ -1,29 +1,34 @@
 package com.chuan.taskmanagement.service.impl;
 
+import com.chuan.taskmanagement.constant.ProjectErrorConstant;
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dao.ProjectDAO;
 import com.chuan.taskmanagement.dto.PageRequest;
 import com.chuan.taskmanagement.dto.PageResponse;
-import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
+import com.chuan.taskmanagement.dto.project.ProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuples;
-import com.chuan.taskmanagement.dto.project.UpdateProjectRequest;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Project;
+import com.chuan.taskmanagement.entity.ProjectMember;
 import com.chuan.taskmanagement.exception.ServiceAppException;
 import com.chuan.taskmanagement.mapper.ProjectMapper;
+import com.chuan.taskmanagement.service.ContextService;
 import com.chuan.taskmanagement.service.ProjectService;
 import com.chuan.taskmanagement.util.PageUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectServiceImpl extends ContextService implements ProjectService {
 
     @Autowired
     private ProjectDAO projectDAO;
@@ -33,38 +38,67 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectMapper projectMapper;
 
     @Override
-    public void createProject(CreateProjectRequest projectRequest) {
-        checkUserExists(projectRequest.getParticipants());
-        projectDAO.save(Project.builder()
-                .name(projectRequest.getName())
-                .description(projectRequest.getDescription())
-                .members(projectRequest.getParticipants())
-                .build());
+    public void createProject(ProjectRequest projectRequest) {
+        AppUser leader = appUserDAO.findById(projectRequest.getLeadId());
+        List<AppUser> members = appUserDAO.findByIds(projectRequest.getParticipantIds());
+
+        if (projectDAO.isCodeExist(projectRequest.getCode())) {
+            throw new ServiceAppException(HttpStatus.BAD_REQUEST, ProjectErrorConstant.KEY_DUPS);
+        }
+
+        Project project = new Project();
+        project.setName(projectRequest.getName());
+        project.setCode(projectRequest.getCode());
+        project.setDescription(projectRequest.getDescription());
+        project.setLeader(leader);
+
+        if (CollectionUtils.isNotEmpty(members)) {
+            Set<ProjectMember> projectMembers = new HashSet<>();
+            for (AppUser appUser : members) {
+                ProjectMember projectMember = new ProjectMember();
+                projectMember.setProject(project);
+                projectMember.setAppUser(appUser);
+                projectMembers.add(projectMember);
+            }
+            project.setProjectMembers(projectMembers);
+        }
+
+        projectDAO.save(project);
     }
 
     @Override
-    public void updateProject(UpdateProjectRequest projectRequest) {
-        checkUserExists(projectRequest.getParticipants());
-        Project project = projectDAO.findById(projectRequest.getId());
-        project.setMembers(projectRequest.getParticipants());
+    public void updateProject(ProjectRequest request) {
+
+        Project project = projectDAO.findById(request.getId());
+        List<AppUser> members = appUserDAO.findByIds(request.getParticipantIds());
+        AppUser leader = appUserDAO.findById(request.getLeadId());
+
+        project.setName(request.getName());
+        project.setDescription(request.getDescription());
+        project.setLeader(leader);
+
+        Set<ProjectMember> projectMembers;
+        if (Objects.isNull(project.getProjectMembers())) {
+            projectMembers = new HashSet<>();
+        } else {
+            projectMembers = project.getProjectMembers();
+        }
+        for (AppUser appUser : members) {
+            if (!members.contains(appUser)) {
+                ProjectMember projectMember = new ProjectMember();
+                projectMember.setProject(project);
+                projectMember.setAppUser(appUser);
+                projectMembers.add(projectMember);
+            }
+        }
+        projectMembers.removeIf(x -> !members.contains(x.getAppUser()));
         projectDAO.save(project);
     }
 
     @Override
     public void deleteProject(Long id) {
         Project project = projectDAO.findById(id);
-        project.setDeleted(true);
-        projectDAO.save(project);
-
-    }
-
-    private void checkUserExists(List<String> users) {
-        if (!CollectionUtils.isEmpty(users)) {
-            List<AppUser> appUserList = appUserDAO.findAllByEmail(users);
-            if (appUserList.size() != users.size()) {
-                throw new ServiceAppException(HttpStatus.BAD_REQUEST, "User Email Invalid");
-            }
-        }
+        projectDAO.delete(project);
     }
 
     @Override

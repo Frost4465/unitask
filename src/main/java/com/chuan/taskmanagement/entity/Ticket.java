@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket extends BaseEntity {
+public class Ticket extends AuditedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +25,17 @@ public class Ticket extends BaseEntity {
     private String status;
     @Column
     private Integer storyPoints;
-    @Column(columnDefinition = "tinyint(0) default 0")
-    private boolean isDeleted;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private AppUser author;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_person_id")
     private AppUser assignedPerson;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "project_id")
     private Project project;
 
 }
