@@ -1,13 +1,13 @@
 package com.chuan.taskmanagement.controller;
 
 import com.chuan.taskmanagement.dto.PageRequest;
-import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.ProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuple;
 import com.chuan.taskmanagement.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class ProjectController {
     }
 
     @GetMapping("/listProject")
-    public ResponseEntity<PageResponse<ProjectTuple>> listProject(PageRequest pageRequest) {
+    public ResponseEntity<PagedModel<ProjectTuple>> listProject(PageRequest pageRequest) {
         return ResponseEntity.ok(projectService.listProject(pageRequest));
     }
 

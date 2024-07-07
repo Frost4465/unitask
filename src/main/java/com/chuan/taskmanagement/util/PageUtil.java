@@ -4,10 +4,15 @@ import com.chuan.taskmanagement.dto.PageRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Objects;
+
 public class PageUtil {
 
-    public static Pageable pageable(PageRequest pageRequest) {
-        return org.springframework.data.domain.PageRequest.of(pageRequest.getPage() - 1, pageRequest.getPageSize());
+    public static Pageable pageable(PageRequest request) {
+        if (Objects.isNull(request)) {
+            return org.springframework.data.domain.PageRequest.of(0, 15);
+        }
+        return org.springframework.data.domain.PageRequest.of(request.getPage() - 1, request.getPageSize());
     }
 
     public static String likeSearch(String string) {

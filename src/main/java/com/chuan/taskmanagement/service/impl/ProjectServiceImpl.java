@@ -4,7 +4,6 @@ import com.chuan.taskmanagement.constant.ProjectErrorConstant;
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dao.ProjectDAO;
 import com.chuan.taskmanagement.dto.PageRequest;
-import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.ProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuple;
@@ -19,6 +18,7 @@ import com.chuan.taskmanagement.util.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -102,10 +102,10 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     }
 
     @Override
-    public PageResponse<ProjectTuple> listProject(PageRequest pageRequest) {
+    public PagedModel<ProjectTuple> listProject(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
         String likeSearch = PageUtil.likeSearch(pageRequest.getSearchQuery());
-        return new PageResponse<>(projectDAO.list(pageable, likeSearch));
+        return new PagedModel<>(projectDAO.list(pageable, likeSearch));
     }
 
     @Override
