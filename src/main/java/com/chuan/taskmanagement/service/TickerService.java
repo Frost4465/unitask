@@ -3,8 +3,6 @@ package com.chuan.taskmanagement.service;
 import com.chuan.taskmanagement.dto.ticket.TicketBoardResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketRequest;
 import com.chuan.taskmanagement.dto.ticket.TicketResponse;
-import com.chuan.taskmanagement.dto.ticket.TicketTuple;
-import com.chuan.taskmanagement.vo.ticket.TicketVO;
 
 import java.util.List;
 
