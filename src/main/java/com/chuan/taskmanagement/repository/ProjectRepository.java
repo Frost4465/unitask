@@ -11,7 +11,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p.id as id , " +
             "p.name as name, " +
-            "p.leaderName as leaderName " +
+            "p.leader.name as leaderName " +
             "FROM Project p")
     Page<ProjectTuples> list(Pageable pageable);
 }

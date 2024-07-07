@@ -1,11 +1,11 @@
 package com.chuan.taskmanagement.service;
 
-import com.chuan.taskmanagement.dto.BaseViewOption;
+import com.chuan.taskmanagement.dto.PageRequest;
+import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuples;
 import com.chuan.taskmanagement.dto.project.UpdateProjectRequest;
-import org.springframework.data.domain.Page;
 
 public interface ProjectService {
 
@@ -15,7 +15,7 @@ public interface ProjectService {
 
     void deleteProject(Long id);
 
-    Page<ProjectTuples> listProject(BaseViewOption baseViewOption);
+    PageResponse<ProjectTuples> listProject(PageRequest pageRequest);
 
     ProjectResponse readProject(Long id);
 

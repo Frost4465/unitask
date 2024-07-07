@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class BaseViewOption {
+public class PageRequest {
 
     @Min(value = 1, message = "Cannot be less than {value}.")
     private int page = 1;
 
-    @Min(value = 0, message = "Cannot be less than {value}.")
+    @Min(value = 1, message = "Cannot be less than {value}.")
     private int pageSize = 10;
 
     private String searchQuery;

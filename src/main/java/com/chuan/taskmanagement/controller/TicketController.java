@@ -31,8 +31,7 @@ public class TicketController {
 
     @GetMapping("/getTicket/{ticketId}")
     public ResponseEntity<?> getTicket(@Valid @PathVariable("ticketId") Long ticketId) {
-        return ResponseEntity.ok(ticketService.getTicket(ticketId)
-        );
+        return ResponseEntity.ok(ticketService.getTicket(ticketId));
     }
 
     @DeleteMapping("/deleteTicket/{ticketId}")

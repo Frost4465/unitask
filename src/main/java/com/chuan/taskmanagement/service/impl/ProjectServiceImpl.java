@@ -2,7 +2,8 @@ package com.chuan.taskmanagement.service.impl;
 
 import com.chuan.taskmanagement.dao.AppUserDAO;
 import com.chuan.taskmanagement.dao.ProjectDAO;
-import com.chuan.taskmanagement.dto.BaseViewOption;
+import com.chuan.taskmanagement.dto.PageRequest;
+import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuples;
@@ -14,7 +15,6 @@ import com.chuan.taskmanagement.mapper.ProjectMapper;
 import com.chuan.taskmanagement.service.ProjectService;
 import com.chuan.taskmanagement.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -68,9 +68,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Page<ProjectTuples> listProject(BaseViewOption baseViewOption) {
-        Pageable pageable = PageUtil.getPage(baseViewOption);
-        return projectDAO.list(pageable);
+    public PageResponse<ProjectTuples> listProject(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.getPage(pageRequest);
+        return new PageResponse<>(projectDAO.list(pageable));
     }
 
     @Override

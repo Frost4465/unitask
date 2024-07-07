@@ -1,6 +1,7 @@
 package com.chuan.taskmanagement.controller;
 
-import com.chuan.taskmanagement.dto.BaseViewOption;
+import com.chuan.taskmanagement.dto.PageRequest;
+import com.chuan.taskmanagement.dto.PageResponse;
 import com.chuan.taskmanagement.dto.project.CreateProjectRequest;
 import com.chuan.taskmanagement.dto.project.ProjectResponse;
 import com.chuan.taskmanagement.dto.project.ProjectTuples;
@@ -8,7 +9,6 @@ import com.chuan.taskmanagement.dto.project.UpdateProjectRequest;
 import com.chuan.taskmanagement.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,26 +22,26 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping("/createProject")
-    public ResponseEntity<?> createTicket(@Valid @RequestBody CreateProjectRequest projectRequest) {
+    public ResponseEntity<String> createTicket(@Valid @RequestBody CreateProjectRequest projectRequest) {
         projectService.createProject(projectRequest);
         return ResponseEntity.ok("Project created");
     }
 
     @PutMapping("/updateProject")
-    public ResponseEntity<?> updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest) {
+    public ResponseEntity<String> updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest) {
         projectService.updateProject(updateProjectRequest);
         return ResponseEntity.ok("Project updated");
     }
 
     @DeleteMapping("/deleteProject/{id}")
-    public ResponseEntity<?> deleteProject(@Valid @PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteProject(@Valid @PathVariable("id") Long id) {
         projectService.deleteProject(id);
         return ResponseEntity.ok("Project deleted");
     }
 
     @GetMapping("/listProject")
-    public ResponseEntity<Page<ProjectTuples>> listProject(BaseViewOption baseViewOption) {
-        return ResponseEntity.ok(projectService.listProject(baseViewOption));
+    public ResponseEntity<PageResponse<ProjectTuples>> listProject(PageRequest pageRequest) {
+        return ResponseEntity.ok(projectService.listProject(pageRequest));
     }
 
     @GetMapping("/readProject/{id}")
