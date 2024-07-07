@@ -69,8 +69,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public PageResponse<ProjectTuples> listProject(PageRequest pageRequest) {
-        Pageable pageable = PageUtil.getPage(pageRequest);
-        return new PageResponse<>(projectDAO.list(pageable));
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        String likeSearch = PageUtil.likeSearch(pageRequest.getSearchQuery());
+        return new PageResponse<>(projectDAO.list(pageable, likeSearch));
     }
 
     @Override

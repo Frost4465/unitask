@@ -1,14 +1,13 @@
 package com.chuan.taskmanagement.service.impl;
 
 import com.chuan.taskmanagement.dao.AppUserDAO;
-import com.chuan.taskmanagement.dao.ProjectDAO;
 import com.chuan.taskmanagement.dao.TicketDAO;
 import com.chuan.taskmanagement.dto.ticket.CreateTicketRequest;
 import com.chuan.taskmanagement.dto.ticket.UpdateTicketRequest;
 import com.chuan.taskmanagement.entity.AppUser;
 import com.chuan.taskmanagement.entity.Ticket;
 import com.chuan.taskmanagement.exception.ServiceAppException;
-import com.chuan.taskmanagement.service.BaseService;
+import com.chuan.taskmanagement.service.ContextService;
 import com.chuan.taskmanagement.service.TickerService;
 import com.chuan.taskmanagement.vo.ticket.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class TicketServiceImpl implements TickerService {
+public class TicketServiceImpl extends ContextService implements TickerService {
 
-    @Autowired
-    private BaseService baseService;
     @Autowired
     private AppUserDAO appUserDAO;
     @Autowired
     private TicketDAO ticketDAO;
-    @Autowired
-    private ProjectDAO projectDAO;
-
     @Override
     public void createTicket(CreateTicketRequest ticketRequest) {
         AppUser assignedAppUser = appUserDAO.findByEmail(ticketRequest.getAssigned());
-        AppUser authorAppUser = appUserDAO.findByEmail(baseService.getCurrentAuthUsername());
+        AppUser authorAppUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Ticket ticket = Ticket.builder()
                 .title(ticketRequest.getTitle())
                 .description(ticketRequest.getDescription())

@@ -1,12 +1,14 @@
 package com.chuan.taskmanagement.mapper;
 
 import com.chuan.taskmanagement.dto.DropdownResponse;
+import com.chuan.taskmanagement.dto.user.ProfileResponse;
 import com.chuan.taskmanagement.entity.AppUser;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserMapper {
@@ -25,5 +27,16 @@ public class UserMapper {
         }
 
         return dropdownResponseList;
+    }
+
+    public ProfileResponse toResponse(AppUser appUser) {
+        if (Objects.isNull(appUser)) {
+            return null;
+        }
+
+        ProfileResponse profileResponse = new ProfileResponse();
+        profileResponse.setName(appUser.getName());
+        profileResponse.setId(appUser.getId());
+        return profileResponse;
     }
 }

@@ -22,7 +22,7 @@ public class ProjectDAO {
         return projectRepository.findById(id).orElse(null);
     }
 
-    public Page<ProjectTuples> list(Pageable pageable) {
-        return projectRepository.list(pageable);
+    public Page<ProjectTuples> list(Pageable pageable, String search) {
+        return projectRepository.list(pageable,search);
     }
 }
