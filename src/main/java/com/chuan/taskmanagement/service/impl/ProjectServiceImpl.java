@@ -43,7 +43,7 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
         List<AppUser> members = appUserDAO.findByIds(projectRequest.getParticipantIds());
 
         if (projectDAO.isCodeExist(projectRequest.getCode())) {
-            throw new ServiceAppException(HttpStatus.BAD_REQUEST, ProjectErrorConstant.KEY_DUPS);
+            throw new ServiceAppException(HttpStatus.BAD_REQUEST, ProjectErrorConstant.KEY_DUP);
         }
 
         Project project = new Project();

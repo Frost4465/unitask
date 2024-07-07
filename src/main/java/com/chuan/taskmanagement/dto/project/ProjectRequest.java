@@ -1,16 +1,18 @@
 package com.chuan.taskmanagement.dto.project;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NonNull;
 
 import java.util.Collection;
 
 @Data
+@Valid
 public class ProjectRequest {
 
     private Long id;
-    @NonNull
+    @NotNull
     private String name;
     private String description;
     @NotBlank

@@ -26,16 +26,16 @@ public class Ticket extends AuditedEntity {
     @Column
     private Integer storyPoints;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private AppUser author;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_person_id")
     private AppUser assignedPerson;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
 }
