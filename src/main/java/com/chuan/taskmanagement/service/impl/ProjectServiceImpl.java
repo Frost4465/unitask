@@ -40,7 +40,7 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     @Override
     public void createProject(ProjectRequest projectRequest) {
         AppUser leader = appUserDAO.findById(projectRequest.getLeadId());
-        List<AppUser> members = appUserDAO.findByIds(projectRequest.getParticipantIds());
+        List<AppUser> members = appUserDAO.findByIds(projectRequest.getProjectMemberIds());
 
         if (projectDAO.isCodeExist(projectRequest.getCode())) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, ProjectErrorConstant.KEY_DUP);
@@ -70,7 +70,7 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     public void updateProject(Long id,ProjectRequest request) {
 
         Project project = projectDAO.findById(id);
-        List<AppUser> members = appUserDAO.findByIds(request.getParticipantIds());
+        List<AppUser> members = appUserDAO.findByIds(request.getProjectMemberIds());
         AppUser leader = appUserDAO.findById(request.getLeadId());
 
         project.setName(request.getName());
