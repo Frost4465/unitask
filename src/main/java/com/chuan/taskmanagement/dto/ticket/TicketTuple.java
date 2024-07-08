@@ -11,7 +11,9 @@ public interface TicketTuple {
 
     TicketStatus getStatus();
 
-    Long getStoryPoint();
+    Integer getStoryPoint();
 
     String getAssignee();
+
+    Long getAssigneeId();
 }

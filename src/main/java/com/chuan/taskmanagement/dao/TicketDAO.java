@@ -39,8 +39,8 @@ public class TicketDAO {
         return ticketRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, TicketErrorConstant.NOT_FOUND));
     }
 
-    public List<TicketTuple> findList(Long id, Long userId) {
-        return ticketRepository.getTicketList(id, userId);
+    public List<TicketTuple> findList(Long id) {
+        return ticketRepository.getTicketList(id);
     }
 
     public Page<Ticket> findList(Pageable pageable, Long userId) {

@@ -1,6 +1,7 @@
 package com.chuan.taskmanagement.mapper;
 
 import com.chuan.taskmanagement.constant.TicketStatus;
+import com.chuan.taskmanagement.dto.DropdownResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketBoardResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketTuple;
@@ -41,7 +42,7 @@ public class TicketMapper {
         return response;
     }
 
-    public  List<TicketResponse> toResponse(Collection<Ticket> tickets) {
+    public List<TicketResponse> toResponse(Collection<Ticket> tickets) {
         if (CollectionUtils.isEmpty(tickets)) {
             return null;
         }
@@ -62,6 +63,8 @@ public class TicketMapper {
         response.setCode(ticket.getCode() + "-" + ticket.getId());
         response.setTitle(ticket.getTitle());
         response.setStatus(ticket.getStatus());
+        response.setStoryPoints(ticket.getStoryPoint());
+        response.setAssignedPerson(new DropdownResponse(ticket.getAssigneeId(), ticket.getAssignee()));
         return response;
     }
 

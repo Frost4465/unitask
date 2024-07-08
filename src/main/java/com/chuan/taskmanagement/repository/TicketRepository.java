@@ -20,12 +20,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.title as title, " +
             "t.status as status, " +
             "ap.name as assignee, " +
+            "ap.Id as assigneeId, " +
             "t.storyPoints as storyPoint " +
             "FROM Ticket t " +
             "LEFT JOIN t.assignedPerson ap " +
-            "WHERE (:id IS NULL OR t.project.id = :id)" +
-            "AND (:userId IS NULL or t.assignedPerson.Id = :userId) ")
-    List<TicketTuple> getTicketList(@Param("id") Long id, @Param("userId") Long userId);
+            "WHERE (:id IS NULL OR t.project.id = :id) ")
+    List<TicketTuple> getTicketList(@Param("id") Long id);
 
     @Query("SELECT t " +
             "FROM Ticket t " +
