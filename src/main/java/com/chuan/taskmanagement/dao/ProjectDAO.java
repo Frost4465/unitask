@@ -38,7 +38,11 @@ public class ProjectDAO {
         return projectRepository.findByCode(key).isPresent();
     }
 
-    public Page<ProjectTuple> list(Pageable pageable, String search) {
-        return projectRepository.list(pageable, search);
+    public Page<ProjectTuple> list(Pageable pageable, String search, Long userId) {
+        return projectRepository.list(pageable, search, userId);
+    }
+
+    public Long countMyProject(Long userId) {
+        return projectRepository.countByProjectMembers_AppUser_Id(userId);
     }
 }

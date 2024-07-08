@@ -72,7 +72,7 @@ public class TicketServiceImpl extends ContextService implements TickerService {
 
     @Override
     public List<TicketBoardResponse> projectTicketList(Long id) {
-        List<TicketTuple> ticketList = ticketDAO.findByProjectId(id);
+        List<TicketTuple> ticketList = ticketDAO.findList(id, null);
         return ticketMapper.toResponse(ticketList);
     }
 }

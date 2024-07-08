@@ -18,10 +18,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "leader.name as leaderName " +
             "FROM Project p " +
             "LEFT JOIN p.leader leader " +
-            "WHERE (:search IS NULL or p.name LIKE :search) ")
-    Page<ProjectTuple> list(Pageable pageable, @Param("search") String search);
+            "WHERE (:search IS NULL or p.name LIKE :search) " +
+            "AND (:userId IS NULL OR leader.Id = :userId or (SELECT count(pm) FROM ProjectMember pm WHERE pm.appUser.Id = :userId)> 0)")
+    Page<ProjectTuple> list(Pageable pageable, @Param("search") String search, @Param("userId") Long userId);
 
     @Query("select p from Project p where p.code = :code")
     Optional<Project> findByCode(@Param("code") String code);
 
+    @Query(" select count(p) from Project p inner join p.projectMembers projectMembers " +
+            " where projectMembers.appUser.Id = :Id")
+    long countByProjectMembers_AppUser_Id(@Param("Id") Long Id);
 }

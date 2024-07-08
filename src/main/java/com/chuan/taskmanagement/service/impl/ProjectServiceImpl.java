@@ -67,7 +67,7 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
     }
 
     @Override
-    public void updateProject(Long id,ProjectRequest request) {
+    public void updateProject(Long id, ProjectRequest request) {
 
         Project project = projectDAO.findById(id);
         List<AppUser> members = appUserDAO.findByIds(request.getProjectMemberIds());
@@ -103,9 +103,10 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
 
     @Override
     public PagedModel<ProjectTuple> listProject(PageRequest pageRequest) {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Pageable pageable = PageUtil.pageable(pageRequest);
         String likeSearch = PageUtil.likeSearch(pageRequest.getSearchQuery());
-        return new PagedModel<>(projectDAO.list(pageable, likeSearch));
+        return new PagedModel<>(projectDAO.list(pageable, likeSearch, appUser.getId()));
     }
 
     @Override

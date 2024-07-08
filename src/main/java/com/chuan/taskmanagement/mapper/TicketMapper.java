@@ -5,10 +5,12 @@ import com.chuan.taskmanagement.dto.ticket.TicketBoardResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketResponse;
 import com.chuan.taskmanagement.dto.ticket.TicketTuple;
 import com.chuan.taskmanagement.entity.Ticket;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +39,17 @@ public class TicketMapper {
         response.setAssignedPerson(userMapper.toDropdown(ticket.getAssignedPerson()));
         response.setProject(projectMapper.toDropdown(ticket.getProject()));
         return response;
+    }
+
+    public  List<TicketResponse> toResponse(Collection<Ticket> tickets) {
+        if (CollectionUtils.isEmpty(tickets)) {
+            return null;
+        }
+        List<TicketResponse> ticketResponses = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            ticketResponses.add(toResponse(ticket));
+        }
+        return ticketResponses;
     }
 
     public TicketResponse toResponse(TicketTuple ticket) {
