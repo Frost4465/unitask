@@ -17,5 +17,5 @@ public class ProjectRequest {
     @NotBlank
     private String code;
     private Long leadId;
-    private Collection<Long> participantIds;
+    private Collection<Long> projectMemberIds;
 }
