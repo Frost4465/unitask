@@ -5,11 +5,13 @@ import com.chuan.taskmanagement.constant.TicketStatus;
 public interface TicketTuple {
     Long getId();
 
-    Long getCode();
+    String getCode();
 
-    Long getTitle();
+    String getTitle();
 
     TicketStatus getStatus();
 
     Long getStoryPoint();
+
+    String getAssignee();
 }

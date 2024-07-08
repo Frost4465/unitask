@@ -13,10 +13,13 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT t.id as id," +
-            "concat(concat(t.project.name, '-'), t.id) as code , " +
+            "t.project.name as code, " +
             "t.title as title, " +
             "t.status as status, " +
+            "ap.name as assignee, " +
             "t.storyPoints as storyPoint " +
-            "FROM Ticket t WHERE t.project.id = :id ")
+            "FROM Ticket t " +
+            "LEFT JOIN t.assignedPerson ap " +
+            "WHERE t.project.id = :id ")
     List<TicketTuple> getTicketList(@Param("id") Long id);
 }

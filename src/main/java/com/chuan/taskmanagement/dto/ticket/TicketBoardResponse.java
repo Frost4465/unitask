@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 public class TicketBoardResponse {
     private TicketStatus status;
-    private List<TicketTuple> tickets;
+    private List<TicketResponse> tickets;
 
-    public TicketBoardResponse(TicketStatus status, List<TicketTuple> ticketTuples) {
+    public TicketBoardResponse(TicketStatus status, List<TicketResponse> ticketTuples) {
         this.status = status;
         this.tickets = ticketTuples;
     }

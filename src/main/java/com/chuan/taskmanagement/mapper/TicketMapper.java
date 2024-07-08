@@ -39,6 +39,19 @@ public class TicketMapper {
         return response;
     }
 
+    public TicketResponse toResponse(TicketTuple ticket) {
+        if (Objects.isNull(ticket)) {
+            return null;
+        }
+
+        TicketResponse response = new TicketResponse();
+        response.setId(ticket.getId());
+        response.setCode(ticket.getCode() + "-" + ticket.getId());
+        response.setTitle(ticket.getTitle());
+        response.setStatus(ticket.getStatus());
+        return response;
+    }
+
     public List<TicketBoardResponse> toResponse(List<TicketTuple> ticketTuples) {
         TicketBoardResponse TO_DO = new TicketBoardResponse(TicketStatus.TO_DO, new ArrayList<>());
         TicketBoardResponse IN_PROGRESS = new TicketBoardResponse(TicketStatus.IN_PROGRESS, new ArrayList<>());
@@ -48,16 +61,16 @@ public class TicketMapper {
         for (TicketTuple tuple : ticketTuples) {
             switch (tuple.getStatus()) {
                 case TO_DO -> {
-                    TO_DO.getTickets().add(tuple);
+                    TO_DO.getTickets().add(toResponse(tuple));
                 }
                 case IN_PROGRESS -> {
-                    IN_PROGRESS.getTickets().add(tuple);
+                    IN_PROGRESS.getTickets().add(toResponse(tuple));
                 }
                 case QA -> {
-                    QA.getTickets().add(tuple);
+                    QA.getTickets().add(toResponse(tuple));
                 }
                 case DONE -> {
-                    DONE.getTickets().add(tuple);
+                    DONE.getTickets().add(toResponse(tuple));
                 }
             }
         }
