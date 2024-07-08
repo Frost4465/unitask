@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl extends ContextService implements ProjectService {
@@ -80,17 +81,26 @@ public class ProjectServiceImpl extends ContextService implements ProjectService
         Set<ProjectMember> projectMembers;
         if (Objects.isNull(project.getProjectMembers())) {
             projectMembers = new HashSet<>();
-        } else {
-            projectMembers = project.getProjectMembers();
-        }
-        for (AppUser appUser : members) {
-            if (!members.contains(appUser)) {
+            project.setProjectMembers(projectMembers);
+            for (AppUser appUser : members) {
                 ProjectMember projectMember = new ProjectMember();
                 projectMember.setProject(project);
                 projectMember.setAppUser(appUser);
                 projectMembers.add(projectMember);
             }
+        } else {
+            projectMembers = project.getProjectMembers();
+            Set<AppUser> existingAppUser = projectMembers.stream().map(ProjectMember::getAppUser).collect(Collectors.toSet());
+            for (AppUser appUser : members) {
+                if (!existingAppUser.contains(appUser)) {
+                    ProjectMember projectMember = new ProjectMember();
+                    projectMember.setProject(project);
+                    projectMember.setAppUser(appUser);
+                    projectMembers.add(projectMember);
+                }
+            }
         }
+
         projectMembers.removeIf(x -> !members.contains(x.getAppUser()));
         projectDAO.save(project);
     }

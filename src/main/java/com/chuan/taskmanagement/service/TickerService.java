@@ -13,6 +13,8 @@ public interface TickerService {
 
     void updateTicket(Long id, TicketRequest ticketRequest);
 
+    void updateTicketStatus(Long id, TicketRequest ticketRequest);
+
     TicketResponse getTicket(Long ticketId);
 
     void deleteTicket(Long ticketId);

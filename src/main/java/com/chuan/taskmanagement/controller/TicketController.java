@@ -31,6 +31,12 @@ public class TicketController {
         return ResponseEntity.ok("Ticket updated");
     }
 
+    @PutMapping("/updateTicket/{id}/status")
+    public ResponseEntity<?> updateTicketStatus(@PathVariable("id") Long id, @RequestBody TicketRequest updateTicketRequest) {
+        ticketService.updateTicketStatus(id, updateTicketRequest);
+        return ResponseEntity.ok("Ticket updated");
+    }
+
     @GetMapping("/getTicket/{id}")
     public ResponseEntity<?> getTicket(@Valid @PathVariable("id") Long id) {
         return ResponseEntity.ok(ticketService.getTicket(id));
@@ -46,5 +52,4 @@ public class TicketController {
     public ResponseEntity<List<TicketBoardResponse>> ticketList(@Valid @PathVariable("id") Long id) {
         return ResponseEntity.ok(ticketService.projectTicketList(id));
     }
-
 }

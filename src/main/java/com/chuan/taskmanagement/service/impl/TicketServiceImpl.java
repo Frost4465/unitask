@@ -59,6 +59,13 @@ public class TicketServiceImpl extends ContextService implements TickerService {
     }
 
     @Override
+    public void updateTicketStatus(Long id, TicketRequest ticketRequest) {
+        Ticket ticket = ticketDAO.findById(id);
+        ticket.setStatus(ticketRequest.getStatus());
+        ticketDAO.save(ticket);
+    }
+
+    @Override
     public TicketResponse getTicket(Long ticketId) {
         Ticket ticket = ticketDAO.findById(ticketId);
         return ticketMapper.toResponse(ticket);
