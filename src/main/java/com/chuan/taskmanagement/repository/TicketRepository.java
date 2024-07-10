@@ -33,7 +33,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE (:userId IS NULL or t.assignedPerson.Id = :userId) ")
     Page<Ticket> findTicketList(Pageable pageable, @Param("userId") Long userId);
 
-    @Query("select count(t) from Ticket t where t.author.Id = :Id and (:status IS NULL OR t.status = :status)")
+    @Query("select count(t) from Ticket t where t.assignedPerson.Id = :Id and (:status IS NULL OR t.status = :status)")
     long countByAuthor_IdAndStatus(@Param("Id") Long Id, @Param("status") TicketStatus status);
 
 }
