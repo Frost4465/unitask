@@ -8,11 +8,11 @@
         <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.chuan</groupId>
-    <artifactId>task-management</artifactId>
+    <groupId>com</groupId>
+    <artifactId>unitask</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>task-management</name>
-    <description>task-management</description>
+    <name>unitask</name>
+    <description>unitask</description>
     <properties>
         <java.version>17</java.version>
     </properties>
