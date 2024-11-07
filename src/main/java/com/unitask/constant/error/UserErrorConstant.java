@@ -1,4 +1,4 @@
-package com.unitask.constant;
+package com.unitask.constant.error;
 
 public class UserErrorConstant {
     public static final String NOT_FOUND = "user.not-found";

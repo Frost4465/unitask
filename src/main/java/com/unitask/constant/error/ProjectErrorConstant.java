@@ -1,4 +1,4 @@
-package com.unitask.constant;
+package com.unitask.constant.error;
 
 public class ProjectErrorConstant {
     public static final String NOT_FOUND = "project.not-found";

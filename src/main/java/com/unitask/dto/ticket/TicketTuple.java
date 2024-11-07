@@ -1,6 +1,6 @@
 package com.unitask.dto.ticket;
 
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.Enum.TicketStatus;
 
 public interface TicketTuple {
     Long getId();

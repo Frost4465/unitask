@@ -20,7 +20,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping("/createProject")
+    @PostMapping("/student/createProject")
     public ResponseEntity<String> createTicket(@Valid @RequestBody ProjectRequest projectRequest) {
         projectService.createProject(projectRequest);
         return ResponseEntity.ok("Project created");

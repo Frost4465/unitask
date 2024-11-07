@@ -1,6 +1,6 @@
 package com.unitask.repository;
 
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.Enum.TicketStatus;
 import com.unitask.dto.ticket.TicketTuple;
 import com.unitask.entity.Ticket;
 import org.springframework.data.domain.Page;

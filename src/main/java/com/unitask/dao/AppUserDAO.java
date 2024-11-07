@@ -1,6 +1,6 @@
 package com.unitask.dao;
 
-import com.unitask.constant.UserErrorConstant;
+import com.unitask.constant.error.UserErrorConstant;
 import com.unitask.entity.AppUser;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.AppUserRepository;

@@ -2,7 +2,7 @@ package com.unitask.controller;
 
 import com.unitask.dto.user.LoginRequest;
 import com.unitask.dto.user.SignUpRequest;
-import com.unitask.security.JwtUtills;
+import com.unitask.security.JwtUtils;
 import com.unitask.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    private JwtUtills utils;
+    private JwtUtils utils;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,7 +40,7 @@ public class LoginController {
 
     @PostMapping("/signUp")
     public ResponseEntity<?> singUp(@RequestBody SignUpRequest signUpRequest) {
-        userService.addUser(signUpRequest.getUsername(), signUpRequest.getPassword(), signUpRequest.getName());
+        userService.addUser(signUpRequest.getUsername(), signUpRequest.getPassword(), signUpRequest.getName(), signUpRequest.getUserRole());
         return ResponseEntity.ok("SIGN UP");
     }
 

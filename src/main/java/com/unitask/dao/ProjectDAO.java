@@ -1,6 +1,6 @@
 package com.unitask.dao;
 
-import com.unitask.constant.ProjectErrorConstant;
+import com.unitask.constant.error.ProjectErrorConstant;
 import com.unitask.dto.project.ProjectTuple;
 import com.unitask.entity.Project;
 import com.unitask.exception.ServiceAppException;

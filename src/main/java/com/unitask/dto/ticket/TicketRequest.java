@@ -1,6 +1,6 @@
 package com.unitask.dto.ticket;
 
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.Enum.TicketStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
