@@ -1,6 +1,6 @@
 package com.unitask.service.impl;
 
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.Enum.TicketStatus;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.ProjectDAO;
 import com.unitask.dao.TicketDAO;

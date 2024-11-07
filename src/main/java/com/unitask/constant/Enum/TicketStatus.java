@@ -1,4 +1,4 @@
-package com.unitask.constant;
+package com.unitask.constant.Enum;
 
 public enum TicketStatus {
     TO_DO,

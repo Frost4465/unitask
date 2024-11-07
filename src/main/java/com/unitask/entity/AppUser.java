@@ -1,5 +1,6 @@
 package com.unitask.entity;
 
+import com.unitask.constant.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,5 @@ public class AppUser {
     private String name;
     @Column(nullable = false, unique = true)
     private String password;
-    private String role;
+    private UserRole userRole;
 }

@@ -1,6 +1,6 @@
 package com.unitask.mapper;
 
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.Enum.TicketStatus;
 import com.unitask.dto.DropdownResponse;
 import com.unitask.dto.ticket.TicketBoardResponse;
 import com.unitask.dto.ticket.TicketResponse;

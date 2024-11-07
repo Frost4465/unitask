@@ -1,7 +1,8 @@
 package com.unitask.service.impl;
 
-import com.unitask.constant.AuthErrorConstant;
-import com.unitask.constant.UserErrorConstant;
+import com.unitask.constant.Enum.UserRole;
+import com.unitask.constant.error.AuthErrorConstant;
+import com.unitask.constant.error.UserErrorConstant;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dto.DropdownResponse;
 import com.unitask.dto.user.ProfileRequest;
@@ -32,7 +33,7 @@ public class UserServiceImpl extends ContextService implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public void addUser(String username, String password, String name) {
+    public void addUser(String username, String password, String name, UserRole userRole ) {
         if (appUserDAO.findOptionalByEmail(username).isPresent()) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, UserErrorConstant.EXISTS);
         }
@@ -41,7 +42,7 @@ public class UserServiceImpl extends ContextService implements UserService {
         appUser.setEmail(username);
         appUser.setName(name);
         appUser.setPassword(passwordEncoder.encode(password));
-        appUser.setRole("ADMIN");
+        appUser.setUserRole(userRole);
         appUserDAO.save(appUser);
     }
 

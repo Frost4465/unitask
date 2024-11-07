@@ -1,7 +1,7 @@
 package com.unitask.dao;
 
-import com.unitask.constant.TicketErrorConstant;
-import com.unitask.constant.TicketStatus;
+import com.unitask.constant.error.TicketErrorConstant;
+import com.unitask.constant.Enum.TicketStatus;
 import com.unitask.dto.ticket.TicketTuple;
 import com.unitask.entity.Ticket;
 import com.unitask.exception.ServiceAppException;

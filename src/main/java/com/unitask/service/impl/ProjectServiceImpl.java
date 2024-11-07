@@ -1,6 +1,6 @@
 package com.unitask.service.impl;
 
-import com.unitask.constant.ProjectErrorConstant;
+import com.unitask.constant.error.ProjectErrorConstant;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.ProjectDAO;
 import com.unitask.dto.PageRequest;

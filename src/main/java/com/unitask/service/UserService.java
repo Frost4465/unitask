@@ -1,5 +1,6 @@
 package com.unitask.service;
 
+import com.unitask.constant.Enum.UserRole;
 import com.unitask.dto.DropdownResponse;
 import com.unitask.dto.user.ProfileRequest;
 import com.unitask.dto.user.ProfileResponse;
@@ -8,7 +9,7 @@ import com.unitask.dto.user.ResetPasswordRequest;
 import java.util.List;
 
 public interface UserService {
-    void addUser(String username, String password, String name);
+    void addUser(String username, String password, String name, UserRole userRole);
 
     ProfileResponse readMyProfile();
 
