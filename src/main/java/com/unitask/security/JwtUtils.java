@@ -29,7 +29,6 @@ public class JwtUtils {
 
     public static final String ROLE_CLAIM = "roles";
 
-
     public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
