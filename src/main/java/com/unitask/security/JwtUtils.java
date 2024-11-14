@@ -28,13 +28,10 @@ public class JwtUtils {
     private int jwtExpiration;
 
     public static final String ROLE_CLAIM = "roles";
-    public static final String USER_CLAIM = "user";
 
 
     public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        Optional<? extends GrantedAuthority> firstAuthority = userPrincipal.getAuthorities().stream().findFirst();
-        String authority = firstAuthority.map(GrantedAuthority::getAuthority).orElse("NUH_UH");;
         List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
@@ -70,12 +67,10 @@ public class JwtUtils {
         return Jwts.parser().verifyWith(key()).build().parseClaimsJws(authtoken).getBody().getSubject();
     }
 
-    public Map<String, String> getClaims(String authtoken) {
-        Map<String, String> map = new HashMap<>();
+    public List<String> getRolesFromToken(String authtoken) {
         Jws<Claims> claims = Jwts.parser().verifyWith(key()).build().parseSignedClaims(authtoken);
         Claims payload = claims.getPayload();
-        map.put(ROLE_CLAIM, (String) payload.get("roles"));
-        map.put(USER_CLAIM, payload.getSubject());
-        return map;
+        return payload.get(ROLE_CLAIM, List.class);
     }
+
 }
