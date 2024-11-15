@@ -1,4 +1,4 @@
-package com.unitask.entity;
+package com.unitask.entity.User;
 
 import com.unitask.constant.Enum.UserRole;
 import jakarta.persistence.*;

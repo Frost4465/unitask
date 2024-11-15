@@ -2,7 +2,7 @@ package com.unitask.mapper;
 
 import com.unitask.dto.DropdownResponse;
 import com.unitask.dto.user.ProfileResponse;
-import com.unitask.entity.AppUser;
+import com.unitask.entity.User.AppUser;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 

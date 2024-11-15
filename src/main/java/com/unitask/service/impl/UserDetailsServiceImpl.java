@@ -1,6 +1,6 @@
 package com.unitask.service.impl;
 
-import com.unitask.entity.AppUser;
+import com.unitask.entity.User.AppUser;
 import com.unitask.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

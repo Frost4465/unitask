@@ -1,6 +1,6 @@
 package com.unitask.repository;
 
-import com.unitask.entity.AppUser;
+import com.unitask.entity.User.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
