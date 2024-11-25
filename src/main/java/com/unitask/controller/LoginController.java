@@ -1,6 +1,7 @@
 package com.unitask.controller;
 
 import com.unitask.dto.user.LoginRequest;
+import com.unitask.dto.user.LoginResponse;
 import com.unitask.dto.user.OtpRequest;
 import com.unitask.dto.user.SignUpRequest;
 import com.unitask.security.JwtUtils;
@@ -8,7 +9,6 @@ import com.unitask.service.UserService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,8 +34,9 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = utils.generateJwtToken(authentication);
-        return ResponseEntity.ok(jwt);
+        LoginResponse loginResponse = utils.generateJwtToken(authentication);
+
+        return ResponseEntity.ok().body(loginResponse);
     }
 
     @PostMapping("/signUp")

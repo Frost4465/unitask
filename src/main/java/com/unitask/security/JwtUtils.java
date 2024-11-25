@@ -1,5 +1,6 @@
 package com.unitask.security;
 
+import com.unitask.dto.user.LoginResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,7 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,16 +31,21 @@ public class JwtUtils {
 
     public static final String ROLE_CLAIM = "roles";
 
-    public String generateJwtToken(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+    public LoginResponse generateJwtToken(Authentication authentication) {
+        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
         List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        return Jwts.builder()
-                .subject(userPrincipal.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(new Date().getTime() + jwtExpiration))
-                .signWith(key())
-                .claim(ROLE_CLAIM, roles)
-                .compact();
+        return LoginResponse.builder()
+                .jwt(Jwts.builder()
+                        .subject(userPrincipal.getUsername())
+                        .issuedAt(new Date())
+                        .expiration(new Date(new Date().getTime() + jwtExpiration))
+                        .signWith(key())
+                        .claim(ROLE_CLAIM, roles)
+                        .compact())
+                .userRole(roles.get(0))
+                .email(userPrincipal.getEmail())
+                .name(userPrincipal.getName())
+                .build();
     }
 
     public SecretKey key() {
