@@ -1,6 +1,7 @@
 package com.unitask.service;
 
 import com.unitask.dto.subject.SubjectRequest;
+import com.unitask.dto.subject.SubjectResponse;
 import com.unitask.entity.Subject;
 
 import java.util.List;
@@ -11,8 +12,8 @@ public interface SubjectService {
 
     Subject updateSubject(Long id, SubjectRequest subjectRequest);
 
-    Subject getSubject(Long subjectId);
+    SubjectResponse getSubject(Long subjectId);
 
-    List<Subject> getListing();
+    List<SubjectResponse> getListing();
 
 }

@@ -1,9 +1,10 @@
 package com.unitask.entity;
 
 import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.entity.User.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -20,12 +21,28 @@ public class Subject {
     private Long Id;
     @Column(name = "name")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecturer")
-    private AppUser lecturer;
+    @Column(name = "code")
+    private String code;
+    @Column(name = "course")
+    private String course;
+    @Column(name = "creditHour")
+    private Integer creditHour;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "learningOutcome")
+    private String learningOutcome;
+    @Column(name = "lecturerName")
+    private String lecturerName;
+    @Column(name = "lecturerContact")
+    private String lecturerContact;
+    @Column(name = "lecturerEmail")
+    private String lecturerEmail;
+    @Column(name = "lecturerOffice")
+    private String lecturerOffice;
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private GeneralStatus status;
-
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<Assessment> assessment;
 
 }

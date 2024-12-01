@@ -1,14 +1,18 @@
 package com.unitask.dto.subject;
 
+
 import com.unitask.constant.Enum.GeneralStatus;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class SubjectRequest {
+@ToString
+public class SubjectResponse {
 
     private String subjectCode;
     private String subjectName;
@@ -20,7 +24,7 @@ public class SubjectRequest {
     private String lecturerContact;
     private String lecturerEmail;
     private String lecturerOffice;
-    private List<AssessmentDto> assessment;
     private GeneralStatus status;
+    private List<AssessmentDto> assessment;
 
 }
