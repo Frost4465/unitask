@@ -1,5 +1,6 @@
 package com.unitask.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.unitask.constant.Enum.GeneralStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,8 +22,10 @@ public class Assessment {
     private String name;
     @Column(name = "weightage")
     private String weightage;
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Subject subject;
     @Column
     @Enumerated(EnumType.STRING)

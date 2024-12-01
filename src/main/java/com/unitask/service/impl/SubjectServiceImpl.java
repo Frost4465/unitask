@@ -51,6 +51,7 @@ public class SubjectServiceImpl implements SubjectService {
                             .name(ass.getAssessmentName())
                             .weightage(ass.getAssessmentWeightage())
                             .subject(subject)
+                            .generalStatus(GeneralStatus.ACTIVE)
                             .build();
                 }).toList());
     }
@@ -78,13 +79,16 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setLecturerEmail(subjectRequest.getLecturerEmail());
         subject.setLecturerOffice(subjectRequest.getLecturerOffice());
         subject.setStatus(subjectRequest.getStatus());
-        subject.setAssessment(subjectRequest.getAssessment().stream().map(ass -> {
-            return Assessment.builder()
-                    .name(ass.getAssessmentName())
-                    .generalStatus(GeneralStatus.ACTIVE)
-                    .weightage(ass.getAssessmentWeightage())
-                    .build();
-        }).toList());
+        subject.setAssessment(assessmentDao.saveAll(
+
+
+                subjectRequest.getAssessment().stream().map(ass -> {
+                    return Assessment.builder()
+                            .name(ass.getAssessmentName())
+                            .generalStatus(GeneralStatus.ACTIVE)
+                            .weightage(ass.getAssessmentWeightage())
+                            .build();
+                }).toList()));
         return subjectDAO.save(subject);
     }
 
@@ -95,6 +99,7 @@ public class SubjectServiceImpl implements SubjectService {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Subject not Found");
         }
         return SubjectResponse.builder()
+                .id(subject.getId())
                 .subjectCode(subject.getCode())
                 .subjectName(subject.getName())
                 .course(subject.getCourse())
@@ -121,25 +126,12 @@ public class SubjectServiceImpl implements SubjectService {
         List<Subject> subjectList = subjectDAO.findAll();
         return subjectList.stream().map(subject -> {
             return SubjectResponse.builder()
+                    .id(subject.getId())
                     .subjectCode(subject.getCode())
                     .subjectName(subject.getName())
-                    .course(subject.getCourse())
-                    .creditHour(subject.getCreditHour())
-                    .description(subject.getDescription())
-                    .learningOutcome(subject.getLearningOutcome())
                     .lecturerName(subject.getLecturerName())
-                    .lecturerContact(subject.getLecturerContact())
-                    .lecturerEmail(subject.getLecturerEmail())
-                    .lecturerOffice(subject.getLecturerOffice())
-                    .status(subject.getStatus())
-                    .assessment(subject.getAssessment().stream()
-                            .filter(ass -> ass.getGeneralStatus().equals(GeneralStatus.ACTIVE))
-                            .map(ass -> {
-                                return AssessmentDto.builder()
-                                        .assessmentName(ass.getName())
-                                        .assessmentWeightage(ass.getWeightage())
-                                        .build();
-                            }).toList()).build();
+                    .description(subject.getDescription())
+                    .build();
         }).toList();
     }
 

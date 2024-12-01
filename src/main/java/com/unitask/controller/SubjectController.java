@@ -31,7 +31,7 @@ public class SubjectController {
         return ResponseEntity.ok().body(subjectService.getSubject(subjectId));
     }
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<?> subjectListing() {
         return ResponseEntity.ok().body(subjectService.getListing());
     }

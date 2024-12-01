@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @ToString
 public class SubjectResponse {
-
+    private Long id;
     private String subjectCode;
     private String subjectName;
     private String course;

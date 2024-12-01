@@ -1,5 +1,6 @@
 package com.unitask.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unitask.constant.Enum.GeneralStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +43,9 @@ public class Subject {
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private GeneralStatus status;
+    @JsonManagedReference
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Assessment> assessment;
 
 }
