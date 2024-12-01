@@ -80,13 +80,12 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setLecturerOffice(subjectRequest.getLecturerOffice());
         subject.setStatus(subjectRequest.getStatus());
         subject.setAssessment(assessmentDao.saveAll(
-
-
                 subjectRequest.getAssessment().stream().map(ass -> {
                     return Assessment.builder()
                             .name(ass.getAssessmentName())
                             .generalStatus(GeneralStatus.ACTIVE)
                             .weightage(ass.getAssessmentWeightage())
+                            .subject(subject)
                             .build();
                 }).toList()));
         return subjectDAO.save(subject);
