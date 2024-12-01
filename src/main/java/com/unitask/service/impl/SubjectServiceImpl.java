@@ -1,7 +1,6 @@
 package com.unitask.service.impl;
 
 import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.AssessmentDao;
 import com.unitask.dao.SubjectDAO;
 import com.unitask.dto.subject.AssessmentDto;
@@ -21,12 +20,10 @@ public class SubjectServiceImpl implements SubjectService {
 
     private final AssessmentDao assessmentDao;
     SubjectDAO subjectDAO;
-    AppUserDAO appUserDAO;
 
 
-    SubjectServiceImpl(SubjectDAO subjectDAO, AppUserDAO appUserDAO, AssessmentDao assessmentDao) {
+    SubjectServiceImpl(SubjectDAO subjectDAO, AssessmentDao assessmentDao) {
         this.subjectDAO = subjectDAO;
-        this.appUserDAO = appUserDAO;
         this.assessmentDao = assessmentDao;
     }
 
@@ -133,6 +130,5 @@ public class SubjectServiceImpl implements SubjectService {
                     .build();
         }).toList();
     }
-
 
 }
