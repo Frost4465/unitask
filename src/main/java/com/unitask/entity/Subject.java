@@ -44,7 +44,7 @@ public class Subject {
     @Enumerated(value = EnumType.STRING)
     private GeneralStatus status;
     @JsonManagedReference
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "subject", orphanRemoval = true)
     @ToString.Exclude
     private List<Assessment> assessment;
 
