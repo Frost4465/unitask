@@ -1,5 +1,6 @@
 package com.unitask.controller;
 
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.subject.SubjectRequest;
 import com.unitask.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class SubjectController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateSubject(@PathVariable("id") Long subjectId, @RequestBody SubjectRequest subjectRequest) {
-        return ResponseEntity.ok().body(subjectService.updateSubject(subjectId, subjectRequest));
+        subjectService.updateSubject(subjectId, subjectRequest);
+        return ResponseEntity.ok().body("OK");
     }
 
     @GetMapping("/{id}")
@@ -32,8 +34,7 @@ public class SubjectController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> subjectListing() {
-        return ResponseEntity.ok().body(subjectService.getListing());
+    public ResponseEntity<?> subjectListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(subjectService.getListing(pageRequest));
     }
-
 }

@@ -10,8 +10,8 @@ import java.util.List;
 @Setter
 public class SubjectRequest {
 
-    private String subjectCode;
-    private String subjectName;
+    private String code;
+    private String name;
     private String course;
     private Integer creditHour;
     private String description;

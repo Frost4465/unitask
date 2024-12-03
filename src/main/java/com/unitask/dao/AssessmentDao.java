@@ -5,6 +5,7 @@ import com.unitask.repository.AssessmentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -16,11 +17,18 @@ public class AssessmentDao {
         this.assessmentRepository = assessmentRepository;
     }
 
-    public List<Assessment> saveAll(List<Assessment> assessmentList) {
+    public List<Assessment> saveAll(Collection<Assessment> assessmentList) {
         if (CollectionUtils.isEmpty(assessmentList)) {
             return null;
         }
         return assessmentRepository.saveAll(assessmentList);
+    }
+
+    public void deleteAll(Collection<Assessment> assessmentList) {
+        if (CollectionUtils.isEmpty(assessmentList)) {
+            return;
+        }
+        assessmentRepository.deleteAll(assessmentList);
     }
 
     public List<Assessment> findBySubjectId(Long id) {

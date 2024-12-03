@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AssessmentDto {
-
+    private Long id;
     private String name;
     private String weightage;
-
 }

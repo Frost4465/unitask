@@ -1,10 +1,8 @@
 package com.unitask.controller;
 
-import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
+import com.unitask.dto.PageRequest;
 import com.unitask.service.StudentSubjectService;
-import com.unitask.util.PageWrapperVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +16,13 @@ public class StudentSubjectController {
     private StudentSubjectService studentSubjectService;
 
     @GetMapping("/list")
-    public ResponseEntity<?> getListing() {
-        return ResponseEntity.ok().body(studentSubjectService.getListing());
+    public ResponseEntity<?> getListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(studentSubjectService.getListing(pageRequest));
+    }
+
+    @GetMapping("/{subjectId}")
+    public ResponseEntity<?> getStudentSubject(@PathVariable Long subjectId) {
+        return ResponseEntity.ok().body(studentSubjectService.get(subjectId));
     }
 
     @PostMapping("/{id}")
@@ -28,8 +31,8 @@ public class StudentSubjectController {
     }
 
     @GetMapping("/assessment/list")
-    public ResponseEntity<?> getAssessmentListing(String search) {
-        return ResponseEntity.ok().body(studentSubjectService.getAssessmentListing(search));
+    public ResponseEntity<?> getAssessmentListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(studentSubjectService.getAssessmentListing(pageRequest));
     }
 
 }

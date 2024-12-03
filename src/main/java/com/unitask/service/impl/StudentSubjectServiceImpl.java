@@ -7,6 +7,7 @@ import com.unitask.dao.StudentSubjectDAO;
 import com.unitask.dao.SubjectDAO;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
+import com.unitask.dto.studentSubject.StudentSubjectResponse;
 import com.unitask.dto.studentSubject.StudentSubjectTuple;
 import com.unitask.entity.Assessment;
 import com.unitask.entity.StudentAssessment;
@@ -14,6 +15,7 @@ import com.unitask.entity.StudentSubject;
 import com.unitask.entity.Subject;
 import com.unitask.entity.User.AppUser;
 import com.unitask.exception.ServiceAppException;
+import com.unitask.mapper.StudentSubjectMapper;
 import com.unitask.service.ContextService;
 import com.unitask.service.StudentSubjectService;
 import com.unitask.util.PageUtil;
@@ -27,13 +29,13 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentSubjectServiceImpl extends ContextService implements StudentSubjectService {
 
     @Autowired
     private StudentSubjectDAO studentSubjectDAO;
-
     @Autowired
     private SubjectDAO subjectDAO;
     @Autowired
@@ -41,10 +43,20 @@ public class StudentSubjectServiceImpl extends ContextService implements Student
     @Autowired
     private StudentAssessmentDao studentAssessmentDao;
 
+    public Page<StudentSubjectTuple> getListing(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        return studentSubjectDAO.findByStudentEmail(pageable, getCurrentAuthUsername(), pageRequest.getSearch());
+    }
 
-    public List<StudentSubjectTuple> getListing() {
-        List<StudentSubjectTuple> studentSubject = subjectDAO.findByStudentEmail(getCurrentAuthUsername());
-        return studentSubject;
+    @Override
+    public StudentSubjectResponse get(Long subjectId) {
+        Subject subject = subjectDAO.findById(subjectId);
+        Optional<StudentSubject> studentSubject = studentSubjectDAO.findByStudentEmailAndSubjectId(getCurrentAuthUsername(), subject.getId());
+        if (studentSubject.isPresent()) {
+            return StudentSubjectMapper.INSTANCE.toResponse(studentSubject.get());
+        }else{
+            return StudentSubjectMapper.INSTANCE.toResponse(subject);
+        }
     }
 
     @Override
@@ -79,10 +91,9 @@ public class StudentSubjectServiceImpl extends ContextService implements Student
     }
 
     @Override
-    public PageWrapperVO getAssessmentListing(String search) {
-        Pageable pageable = PageUtil.pageable(new PageRequest());
-        Page<StudentAssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(search, pageable);
+    public PageWrapperVO getAssessmentListing(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        Page<StudentAssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable);
         return new PageWrapperVO(studentAssessmentTuplePage, studentAssessmentTuplePage.getContent());
-
     }
 }

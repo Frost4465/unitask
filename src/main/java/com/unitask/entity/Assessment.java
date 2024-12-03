@@ -5,6 +5,8 @@ import com.unitask.constant.Enum.GeneralStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -23,12 +25,14 @@ public class Assessment {
     @Column(name = "weightage")
     private String weightage;
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     @ToString.Exclude
     private Subject subject;
     @Column
     @Enumerated(EnumType.STRING)
     private GeneralStatus generalStatus;
+    @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL)
+    List<StudentAssessment> studentAssessments;
 
 }

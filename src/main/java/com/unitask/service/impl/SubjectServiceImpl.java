@@ -1,38 +1,36 @@
 package com.unitask.service.impl;
 
-import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.dao.AssessmentDao;
 import com.unitask.dao.SubjectDAO;
-import com.unitask.dto.subject.AssessmentDto;
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.subject.SubjectRequest;
 import com.unitask.dto.subject.SubjectResponse;
-import com.unitask.entity.Assessment;
+import com.unitask.dto.subject.SubjectTuple;
 import com.unitask.entity.Subject;
 import com.unitask.exception.ServiceAppException;
+import com.unitask.mapper.SubjectMapper;
+import com.unitask.service.AssessmentService;
 import com.unitask.service.ContextService;
 import com.unitask.service.SubjectService;
+import com.unitask.util.PageUtil;
+import com.unitask.util.PageWrapperVO;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@AllArgsConstructor
 public class SubjectServiceImpl extends ContextService implements SubjectService {
 
-    private final AssessmentDao assessmentDao;
-    SubjectDAO subjectDAO;
-
-
-    SubjectServiceImpl(SubjectDAO subjectDAO, AssessmentDao assessmentDao) {
-        this.subjectDAO = subjectDAO;
-        this.assessmentDao = assessmentDao;
-    }
+    private final AssessmentService assessmentService;
+    private final SubjectDAO subjectDAO;
 
     @Override
     public void create(SubjectRequest subjectRequest) {
         Subject subject = subjectDAO.save(Subject.builder()
-                .code(subjectRequest.getSubjectCode())
-                .name(subjectRequest.getSubjectName())
+                .code(subjectRequest.getCode())
+                .name(subjectRequest.getName())
                 .course(subjectRequest.getCourse())
                 .creditHour(subjectRequest.getCreditHour())
                 .description(subjectRequest.getDescription())
@@ -42,32 +40,17 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
                 .lecturerEmail(subjectRequest.getLecturerEmail())
                 .lecturerOffice(subjectRequest.getLecturerOffice())
                 .status(subjectRequest.getStatus()).build());
-
-        assessmentDao.saveAll(
-                subjectRequest.getAssessment().stream().map(ass -> {
-                    return Assessment.builder()
-                            .name(ass.getName())
-                            .weightage(ass.getWeightage())
-                            .subject(subject)
-                            .generalStatus(GeneralStatus.ACTIVE)
-                            .build();
-                }).toList());
+        assessmentService.update(subject, subjectRequest.getAssessment());
     }
 
     @Override
-    public Subject updateSubject(Long id, SubjectRequest subjectRequest) {
+    public void updateSubject(Long id, SubjectRequest subjectRequest) {
         Subject subject = subjectDAO.findById(id);
         if (subject == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Subject not Found");
         }
-        List<Assessment> assessmentList = assessmentDao.findBySubjectId(id);
-        assessmentDao.saveAll(assessmentList.stream().map(ass -> {
-            ass.setGeneralStatus(GeneralStatus.INACTIVE);
-            return ass;
-        }).toList());
-
-        subject.setCode(subjectRequest.getSubjectCode());
-        subject.setName(subjectRequest.getSubjectName());
+        subject.setCode(subjectRequest.getCode());
+        subject.setName(subjectRequest.getName());
         subject.setCourse(subjectRequest.getCourse());
         subject.setCreditHour(subjectRequest.getCreditHour());
         subject.setDescription(subjectRequest.getDescription());
@@ -77,16 +60,9 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
         subject.setLecturerEmail(subjectRequest.getLecturerEmail());
         subject.setLecturerOffice(subjectRequest.getLecturerOffice());
         subject.setStatus(subjectRequest.getStatus());
-        subject.setAssessment(assessmentDao.saveAll(
-                subjectRequest.getAssessment().stream().map(ass -> {
-                    return Assessment.builder()
-                            .name(ass.getName())
-                            .generalStatus(GeneralStatus.ACTIVE)
-                            .weightage(ass.getWeightage())
-                            .subject(subject)
-                            .build();
-                }).toList()));
-        return subjectDAO.save(subject);
+
+        subjectDAO.save(subject);
+        assessmentService.update(subject, subjectRequest.getAssessment());
     }
 
     @Override
@@ -95,41 +71,14 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
         if (subject == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Subject not Found");
         }
-        return SubjectResponse.builder()
-                .id(subject.getId())
-                .subjectCode(subject.getCode())
-                .subjectName(subject.getName())
-                .course(subject.getCourse())
-                .creditHour(subject.getCreditHour())
-                .description(subject.getDescription())
-                .learningOutcome(subject.getLearningOutcome())
-                .lecturerName(subject.getLecturerName())
-                .lecturerContact(subject.getLecturerContact())
-                .lecturerEmail(subject.getLecturerEmail())
-                .lecturerOffice(subject.getLecturerOffice())
-                .status(subject.getStatus())
-                .assessment(subject.getAssessment().stream()
-                        .filter(ass -> ass.getGeneralStatus().equals(GeneralStatus.ACTIVE))
-                        .map(ass -> {
-                            return AssessmentDto.builder()
-                                    .name(ass.getName())
-                                    .weightage(ass.getWeightage())
-                                    .build();
-                        }).toList()).build();
+        return SubjectMapper.INSTANCE.toResponse(subject);
     }
 
     @Override
-    public List<SubjectResponse> getListing() {
-        List<Subject> subjectList = subjectDAO.findAll();
-        return subjectList.stream().map(subject -> {
-            return SubjectResponse.builder()
-                    .id(subject.getId())
-                    .subjectCode(subject.getCode())
-                    .subjectName(subject.getName())
-                    .lecturerName(subject.getLecturerName())
-                    .description(subject.getDescription())
-                    .build();
-        }).toList();
+    public PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        Page<SubjectTuple> subjectList = subjectDAO.findListing(pageable, pageRequest.getSearch());
+        return new PageWrapperVO<SubjectTuple>(subjectList, subjectList.getContent());
     }
 
 }

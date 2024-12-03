@@ -14,8 +14,8 @@ import java.util.List;
 @ToString
 public class SubjectResponse {
     private Long id;
-    private String subjectCode;
-    private String subjectName;
+    private String code;
+    private String name;
     private String course;
     private Integer creditHour;
     private String description;
