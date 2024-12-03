@@ -19,4 +19,5 @@ public interface StudentSubjectMapper {
 
     @IterableMapping(qualifiedByName = "toResponse")
     List<StudentSubjectResponse> toResponse(List<StudentSubject> studentSubject);
+
 }

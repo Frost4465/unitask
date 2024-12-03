@@ -16,4 +16,11 @@ public class StudentSubjectDAO {
     public List<StudentSubject> findAll() {
         return studentSubjectRepository.findAll();
     }
+
+    public StudentSubject save(StudentSubject studentSubject) {
+        if (studentSubject == null) {
+            return null;
+        }
+        return studentSubjectRepository.save(studentSubject);
+    }
 }
