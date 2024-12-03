@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class AssessmentDto {
 
-    private String assessmentName;
-    private String assessmentWeightage;
+    private String name;
+    private String weightage;
 
 }

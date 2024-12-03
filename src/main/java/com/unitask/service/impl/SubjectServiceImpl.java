@@ -9,6 +9,7 @@ import com.unitask.dto.subject.SubjectResponse;
 import com.unitask.entity.Assessment;
 import com.unitask.entity.Subject;
 import com.unitask.exception.ServiceAppException;
+import com.unitask.service.ContextService;
 import com.unitask.service.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SubjectServiceImpl implements SubjectService {
+public class SubjectServiceImpl extends ContextService implements SubjectService {
 
     private final AssessmentDao assessmentDao;
     SubjectDAO subjectDAO;
@@ -45,8 +46,8 @@ public class SubjectServiceImpl implements SubjectService {
         assessmentDao.saveAll(
                 subjectRequest.getAssessment().stream().map(ass -> {
                     return Assessment.builder()
-                            .name(ass.getAssessmentName())
-                            .weightage(ass.getAssessmentWeightage())
+                            .name(ass.getName())
+                            .weightage(ass.getWeightage())
                             .subject(subject)
                             .generalStatus(GeneralStatus.ACTIVE)
                             .build();
@@ -79,9 +80,9 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setAssessment(assessmentDao.saveAll(
                 subjectRequest.getAssessment().stream().map(ass -> {
                     return Assessment.builder()
-                            .name(ass.getAssessmentName())
+                            .name(ass.getName())
                             .generalStatus(GeneralStatus.ACTIVE)
-                            .weightage(ass.getAssessmentWeightage())
+                            .weightage(ass.getWeightage())
                             .subject(subject)
                             .build();
                 }).toList()));
@@ -111,8 +112,8 @@ public class SubjectServiceImpl implements SubjectService {
                         .filter(ass -> ass.getGeneralStatus().equals(GeneralStatus.ACTIVE))
                         .map(ass -> {
                             return AssessmentDto.builder()
-                                    .assessmentName(ass.getName())
-                                    .assessmentWeightage(ass.getWeightage())
+                                    .name(ass.getName())
+                                    .weightage(ass.getWeightage())
                                     .build();
                         }).toList()).build();
     }
