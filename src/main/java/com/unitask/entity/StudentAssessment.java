@@ -2,6 +2,7 @@ package com.unitask.entity;
 
 import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.entity.User.AppUser;
+import com.unitask.entity.assessment.Assessment;
 import jakarta.persistence.*;
 import lombok.*;
 

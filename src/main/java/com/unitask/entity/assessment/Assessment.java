@@ -1,11 +1,15 @@
-package com.unitask.entity;
+package com.unitask.entity.assessment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.unitask.constant.Enum.GeneralStatus;
+import com.unitask.entity.StudentAssessment;
+import com.unitask.entity.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -34,5 +38,20 @@ public class Assessment {
     private GeneralStatus generalStatus;
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
     List<StudentAssessment> studentAssessments;
+
+    @Column
+    private String assignmentMode;
+
+    @Column
+    private LocalDate dueDate;
+
+    @Column(columnDefinition = "tex")
+    private String lecturerInstruction;
+
+    @OneToMany(mappedBy = "assessment", orphanRemoval = true)
+    private Set<AssessmentMarkingRubric> assessmentMarkingRubrics;
+
+    @OneToMany(mappedBy = "assessment", orphanRemoval = true)
+    private Set<AssessmentFile> attachedFile;
 
 }

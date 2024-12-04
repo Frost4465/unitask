@@ -9,7 +9,7 @@ import com.unitask.dto.PageRequest;
 import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
 import com.unitask.dto.studentSubject.StudentSubjectResponse;
 import com.unitask.dto.studentSubject.StudentSubjectTuple;
-import com.unitask.entity.Assessment;
+import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.StudentSubject;
 import com.unitask.entity.Subject;

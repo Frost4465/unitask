@@ -3,12 +3,19 @@ package com.unitask.service.impl;
 
 import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dao.AssessmentDao;
+import com.unitask.dto.assessment.AssessmentRequest;
+import com.unitask.dto.assessment.AssessmentResponse;
 import com.unitask.dto.subject.AssessmentDto;
-import com.unitask.entity.Assessment;
 import com.unitask.entity.Subject;
+import com.unitask.entity.assessment.Assessment;
+import com.unitask.entity.assessment.AssessmentFile;
+import com.unitask.mapper.AssessmentMapper;
 import com.unitask.service.AssessmentService;
+import com.unitask.util.OssUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +28,15 @@ import java.util.stream.Collectors;
 public class AssessmentServiceImpl implements AssessmentService {
 
     private final AssessmentDao assessmentDao;
+    private final OssUtil ossUtil;
+
+    @Override
+    public AssessmentResponse read(Long id) {
+        Assessment assessment = assessmentDao.findById(id);
+        AssessmentResponse response = AssessmentMapper.INSTANCE.toResponse(assessment);
+        response.setAttachedFile(ossUtil.toResponse(assessment.getAttachedFile()));
+        return response;
+    }
 
     public void update(Subject subject, List<AssessmentDto> dtos) {
         Map<Long, Assessment> map = subject.getAssessment()
@@ -47,6 +63,29 @@ public class AssessmentServiceImpl implements AssessmentService {
         //delete
         assessmentDao.deleteAll(map.values());
         assessmentDao.saveAll(saveThis);
+    }
+
+    @Override
+    public void update(Long id, AssessmentRequest assessmentRequest) {
+
+    }
+
+    @Override
+    @SneakyThrows
+    public void uploadFile(Long id, MultipartFile multipartFile) {
+        Assessment assessment = assessmentDao.findById(id);
+        AssessmentFile assessmentFile = ossUtil.toBaseOssFile(AssessmentFile.class,
+                "assessment/" + id, multipartFile);
+        assessmentFile.setAssessment(assessment);
+        assessmentDao.saveFile(assessmentFile);
+        ossUtil.putObject(assessmentFile);
+    }
+
+    @Override
+    public void deleteFile(Long fileId) {
+        AssessmentFile assessmentFile = assessmentDao.findFileByFileId(fileId);
+        ossUtil.removeObject(assessmentFile);
+        assessmentDao.deleteFile(assessmentFile);
     }
 
 }
