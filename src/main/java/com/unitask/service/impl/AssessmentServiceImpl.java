@@ -81,14 +81,16 @@ public class AssessmentServiceImpl extends ContextService implements AssessmentS
 
     @Override
     public void update(Long id, AssessmentRequest assessmentRequest) {
-
+        Assessment assessment = assessmentDao.findById(id);
+        AssessmentMapper.INSTANCE.update(assessment, assessmentRequest);
+        assessmentDao.save(assessment);
     }
 
     @Override
     @SneakyThrows
     public void uploadFile(Long id, MultipartFile multipartFile) {
         Assessment assessment = assessmentDao.findById(id);
-        AssessmentFile assessmentFile = ossUtil.toBaseOssFile(AssessmentFile.class,
+        AssessmentFile assessmentFile = OssUtil.toBaseOssFile(AssessmentFile.class,
                 "assessment/" + id, multipartFile);
         assessmentFile.setAssessment(assessment);
         assessmentDao.saveFile(assessmentFile);

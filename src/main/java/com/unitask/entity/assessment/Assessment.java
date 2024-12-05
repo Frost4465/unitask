@@ -38,6 +38,7 @@ public class Assessment {
     @Column
     @Enumerated(EnumType.STRING)
     private GeneralStatus generalStatus;
+
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
     List<StudentAssessment> studentAssessments;
 

@@ -48,6 +48,10 @@ public class AssessmentDao {
         return assessmentRepository.findBySubject_Owner_EmailAndNameLike(pageable, email, search);
     }
 
+    public Assessment save(Assessment assessment) {
+        return assessmentRepository.save(assessment);
+    }
+
     public AssessmentFile saveFile(AssessmentFile assessmentFile) {
         return assessmentFileRepository.save(assessmentFile);
     }

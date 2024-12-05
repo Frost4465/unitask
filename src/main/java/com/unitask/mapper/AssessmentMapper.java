@@ -16,6 +16,7 @@ public interface AssessmentMapper {
     @Mapping(target = "attachedFile", ignore = true)
     AssessmentResponse toResponse(Assessment assessment);
 
+    @Mapping(target = "attachedFile", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "subject", ignore = true)
     void update(@MappingTarget Assessment assessment, AssessmentRequest assessmentRequest);

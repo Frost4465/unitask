@@ -22,6 +22,7 @@ public class AssessmentMarkingRubric {
     private String criteria;
     @Column
     private String weightage;
+
     @ManyToOne
     @JoinColumn
     private Assessment assessment;
