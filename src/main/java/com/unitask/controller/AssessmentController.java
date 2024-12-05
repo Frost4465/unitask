@@ -1,5 +1,6 @@
 package com.unitask.controller;
 
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentRequest;
 import com.unitask.service.AssessmentService;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,12 @@ public class AssessmentController {
 
     private final AssessmentService assessmentService;
 
-    @GetMapping
-    @PutMapping("/update/{id}")
+    @GetMapping("/list")
+    public ResponseEntity<?> getListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(assessmentService.getListing(pageRequest));
+    }
+
+    @GetMapping("/{id}")
     public ResponseEntity<?> getAssessment(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(assessmentService.read(id));
     }

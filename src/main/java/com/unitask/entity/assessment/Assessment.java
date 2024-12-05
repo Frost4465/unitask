@@ -23,16 +23,18 @@ public class Assessment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "weightage")
     private String weightage;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     @ToString.Exclude
     private Subject subject;
+
     @Column
     @Enumerated(EnumType.STRING)
     private GeneralStatus generalStatus;

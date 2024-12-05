@@ -9,4 +9,6 @@ public interface SubjectTuple {
     String getLecturerName();
 
     String getCode();
+
+    String getColor();
 }

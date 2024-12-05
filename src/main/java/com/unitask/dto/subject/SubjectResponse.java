@@ -25,6 +25,7 @@ public class SubjectResponse {
     private String lecturerEmail;
     private String lecturerOffice;
     private GeneralStatus status;
+    private String color;
     private List<AssessmentDto> assessment;
 
 }

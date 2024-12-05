@@ -1,11 +1,14 @@
 package com.unitask.dao;
 
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.assessment.AssessmentFile;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.AssessmentFileRepository;
 import com.unitask.repository.AssessmentRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -39,6 +42,10 @@ public class AssessmentDao {
             return null;
         }
         return assessmentRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, "NOT_FOUND"));
+    }
+
+    public Page<AssessmentTuple> findListing(Pageable pageable, String email, String search) {
+        return assessmentRepository.findBySubject_Owner_EmailAndNameLike(pageable, email, search);
     }
 
     public AssessmentFile saveFile(AssessmentFile assessmentFile) {

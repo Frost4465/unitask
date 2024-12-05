@@ -1,11 +1,13 @@
 package com.unitask.service.impl;
 
+import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.SubjectDAO;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.subject.SubjectRequest;
 import com.unitask.dto.subject.SubjectResponse;
 import com.unitask.dto.subject.SubjectTuple;
 import com.unitask.entity.Subject;
+import com.unitask.entity.User.AppUser;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.SubjectMapper;
 import com.unitask.service.AssessmentService;
@@ -25,21 +27,13 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
 
     private final AssessmentService assessmentService;
     private final SubjectDAO subjectDAO;
+    private final AppUserDAO appUserDAO;
 
     @Override
     public void create(SubjectRequest subjectRequest) {
-        Subject subject = subjectDAO.save(Subject.builder()
-                .code(subjectRequest.getCode())
-                .name(subjectRequest.getName())
-                .course(subjectRequest.getCourse())
-                .creditHour(subjectRequest.getCreditHour())
-                .description(subjectRequest.getDescription())
-                .learningOutcome(subjectRequest.getLearningOutcome())
-                .lecturerName(subjectRequest.getLecturerName())
-                .lecturerContact(subjectRequest.getLecturerContact())
-                .lecturerEmail(subjectRequest.getLecturerEmail())
-                .lecturerOffice(subjectRequest.getLecturerOffice())
-                .status(subjectRequest.getStatus()).build());
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Subject subject = SubjectMapper.INSTANCE.toEntity(subjectRequest, appUser);
+        subjectDAO.save(subject);
         assessmentService.update(subject, subjectRequest.getAssessment());
     }
 
@@ -49,17 +43,8 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
         if (subject == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Subject not Found");
         }
-        subject.setCode(subjectRequest.getCode());
-        subject.setName(subjectRequest.getName());
-        subject.setCourse(subjectRequest.getCourse());
-        subject.setCreditHour(subjectRequest.getCreditHour());
-        subject.setDescription(subjectRequest.getDescription());
-        subject.setLearningOutcome(subjectRequest.getLearningOutcome());
-        subject.setLecturerName(subjectRequest.getLecturerName());
-        subject.setLecturerContact(subjectRequest.getLecturerContact());
-        subject.setLecturerEmail(subjectRequest.getLecturerEmail());
-        subject.setLecturerOffice(subjectRequest.getLecturerOffice());
-        subject.setStatus(subjectRequest.getStatus());
+        SubjectMapper.INSTANCE.toEntity(subject, subjectRequest);
+
 
         subjectDAO.save(subject);
         assessmentService.update(subject, subjectRequest.getAssessment());
@@ -76,9 +61,9 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
 
     @Override
     public PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest) {
+        String email = getCurrentAuthUsername();
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<SubjectTuple> subjectList = subjectDAO.findListing(pageable, pageRequest.getSearch());
+        Page<SubjectTuple> subjectList = subjectDAO.findListing(pageable, email, pageRequest.getSearch());
         return new PageWrapperVO<SubjectTuple>(subjectList, subjectList.getContent());
     }
-
 }

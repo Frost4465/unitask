@@ -1,6 +1,6 @@
 package com.unitask.dao;
 
-import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.repository.StudentAssessmentRepository;
 import com.unitask.util.PageUtil;
@@ -26,7 +26,7 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.saveAll(studentAssessmentList);
     }
 
-    public Page<StudentAssessmentTuple> getAssessmentListing(String search, Pageable pageable) {
+    public Page<AssessmentTuple> getAssessmentListing(String search, Pageable pageable) {
         String filter = search;
         if (StringUtils.isNotBlank(search)) {
             filter = PageUtil.likeSearch(search);

@@ -3,17 +3,23 @@ package com.unitask.service.impl;
 
 import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dao.AssessmentDao;
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentRequest;
 import com.unitask.dto.assessment.AssessmentResponse;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.dto.subject.AssessmentDto;
 import com.unitask.entity.Subject;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.assessment.AssessmentFile;
 import com.unitask.mapper.AssessmentMapper;
 import com.unitask.service.AssessmentService;
+import com.unitask.service.ContextService;
 import com.unitask.util.OssUtil;
+import com.unitask.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AssessmentServiceImpl implements AssessmentService {
+public class AssessmentServiceImpl extends ContextService implements AssessmentService {
 
     private final AssessmentDao assessmentDao;
     private final OssUtil ossUtil;
@@ -36,12 +42,16 @@ public class AssessmentServiceImpl implements AssessmentService {
         return response;
     }
 
+    public Page<AssessmentTuple> getListing(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        return assessmentDao.findListing(pageable, getCurrentAuthUsername(), pageRequest.getSearch());
+    }
+
     public void update(Subject subject, List<AssessmentDto> dtos) {
         Map<Long, Assessment> map;
-        if (CollectionUtils.isEmpty(subject.getAssessment())){
+        if (CollectionUtils.isEmpty(subject.getAssessment())) {
             map = new HashMap<>();
-        }
-        else {
+        } else {
             map = subject.getAssessment()
                     .stream()
                     .collect(Collectors.toMap(x -> x.getId(), x -> x));

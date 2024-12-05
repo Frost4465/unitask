@@ -6,7 +6,7 @@ import com.unitask.dao.StudentAssessmentDao;
 import com.unitask.dao.StudentSubjectDAO;
 import com.unitask.dao.SubjectDAO;
 import com.unitask.dto.PageRequest;
-import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.dto.studentSubject.StudentSubjectResponse;
 import com.unitask.dto.studentSubject.StudentSubjectTuple;
 import com.unitask.entity.assessment.Assessment;
@@ -93,7 +93,7 @@ public class StudentSubjectServiceImpl extends ContextService implements Student
     @Override
     public PageWrapperVO getAssessmentListing(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<StudentAssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable);
+        Page<AssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable);
         return new PageWrapperVO(studentAssessmentTuplePage, studentAssessmentTuplePage.getContent());
     }
 }

@@ -11,4 +11,5 @@ public interface StudentSubjectTuple {
     String getLecturerName();
 
     String getStatus();
+    String getColor();
 }

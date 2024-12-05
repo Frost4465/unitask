@@ -22,5 +22,6 @@ public class SubjectRequest {
     private String lecturerOffice;
     private List<AssessmentDto> assessment;
     private GeneralStatus status;
+    private String color;
 
 }

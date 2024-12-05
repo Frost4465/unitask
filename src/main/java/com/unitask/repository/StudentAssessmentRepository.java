@@ -1,6 +1,6 @@
 package com.unitask.repository;
 
-import com.unitask.dto.studentAssessment.StudentAssessmentTuple;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 public interface StudentAssessmentRepository extends JpaRepository<StudentAssessment, Long> {
 
 
-    @Query("select s.Id as id," +
+    @Query("select s.id as id," +
             "a.name as name," +
-            "s.enrollmentDate as enrolDate," +
+            "a.dueDate as dueDate," +
             "s.status as status," +
             "sub.name as subjectName" +
             " from StudentAssessment s " +
@@ -22,5 +22,5 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
             "left join Subject sub ON a.subject.Id = sub.Id " +
             "where (?1 is null or a.name like ?1) " +
             "order by s.status DESC")
-    Page<StudentAssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);
+    Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);
 }

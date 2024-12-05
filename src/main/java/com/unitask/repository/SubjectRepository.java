@@ -12,13 +12,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query("SELECT " +
-            "s.Id as id, " +
+            "s.id as id, " +
             "s.name as name, " +
             "s.code as code," +
+            "s.color as color," +
             "s.lecturerName as lecturerName " +
             "FROM Subject s " +
-            "WHERE  (:search IS NULL OR s.name LIKE %:search%)"
+            "WHERE  (:search IS NULL OR s.name LIKE %:search%) " +
+            "AND (:email IS NULL OR s.owner.email = :email)"
     )
-    Page<SubjectTuple> findListing(Pageable pageable, String search);
+    Page<SubjectTuple> findListing(Pageable pageable, String email, String search);
 
 }

@@ -13,10 +13,11 @@ import java.util.Optional;
 @Repository
 public interface StudentSubjectRepository extends JpaRepository<StudentSubject, Long> {
     @Query("SELECT " +
-            "s.Id as id, " +
+            "s.id as id, " +
             "s.name as name, " +
             "s.code as code," +
             "s.lecturerName as lecturerName," +
+            "s.color as color," +
             "ss.status as status " +
             "FROM Subject s " +
             "LEFT JOIN StudentSubject ss ON ss.subject.Id = s.Id " +

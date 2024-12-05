@@ -1,6 +1,5 @@
 package com.unitask.dao;
 
-import com.unitask.dto.studentSubject.StudentSubjectTuple;
 import com.unitask.dto.subject.SubjectTuple;
 import com.unitask.entity.Subject;
 import com.unitask.repository.SubjectRepository;
@@ -8,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SubjectDAO {
@@ -35,7 +32,7 @@ public class SubjectDAO {
         return subjectRepository.findById(id).orElse(null);
     }
 
-    public Page<SubjectTuple> findListing(Pageable pageable, String search) {
-        return subjectRepository.findListing(pageable,search);
+    public Page<SubjectTuple> findListing(Pageable pageable, String email, String search) {
+        return subjectRepository.findListing(pageable, email, search);
     }
 }

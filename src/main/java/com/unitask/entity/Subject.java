@@ -2,13 +2,13 @@ package com.unitask.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unitask.constant.Enum.GeneralStatus;
+import com.unitask.entity.User.AppUser;
 import com.unitask.entity.assessment.Assessment;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
 @ToString
@@ -20,7 +20,7 @@ public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "code")
@@ -44,6 +44,11 @@ public class Subject {
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private GeneralStatus status;
+    @Column
+    private String color;
+    @ManyToOne
+    @JoinColumn
+    private AppUser owner;
     @JsonManagedReference
     @OneToMany(mappedBy = "subject", orphanRemoval = true)
     @ToString.Exclude

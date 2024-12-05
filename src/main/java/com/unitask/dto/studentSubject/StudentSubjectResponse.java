@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 public class StudentSubjectResponse {
 
-    private Long Id;
+    private Long id;
 
     private LocalDate enrollmentDate;
 
