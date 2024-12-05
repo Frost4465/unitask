@@ -15,12 +15,10 @@ import com.unitask.util.OssUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,9 +37,15 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     public void update(Subject subject, List<AssessmentDto> dtos) {
-        Map<Long, Assessment> map = subject.getAssessment()
-                .stream()
-                .collect(Collectors.toMap(x -> x.getId(), x -> x));
+        Map<Long, Assessment> map;
+        if (CollectionUtils.isEmpty(subject.getAssessment())){
+            map = new HashMap<>();
+        }
+        else {
+            map = subject.getAssessment()
+                    .stream()
+                    .collect(Collectors.toMap(x -> x.getId(), x -> x));
+        }
 
         List<Assessment> saveThis = new ArrayList<>();
         for (AssessmentDto dto : dtos) {

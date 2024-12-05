@@ -45,7 +45,7 @@ public class Assessment {
     @Column
     private LocalDate dueDate;
 
-    @Column(columnDefinition = "tex")
+    @Column(columnDefinition = "text")
     private String lecturerInstruction;
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
