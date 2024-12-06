@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,8 +52,8 @@ public class Assessment {
     @Column(columnDefinition = "text")
     private String lecturerInstruction;
 
-    @OneToMany(mappedBy = "assessment", orphanRemoval = true)
-    private Set<AssessmentMarkingRubric> assessmentMarkingRubrics;
+    @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AssessmentMarkingRubric> assessmentMarkingRubrics = new HashSet<>();
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
     private Set<AssessmentFile> attachedFile;

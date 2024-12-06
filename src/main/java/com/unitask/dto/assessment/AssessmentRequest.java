@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class AssessmentRequest {
@@ -13,5 +14,5 @@ public class AssessmentRequest {
     private String assignmentMode;
     private LocalDate dueDate;
     private String lecturerInstruction;
-    private List<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
+    private Set<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
 }
