@@ -39,8 +39,7 @@ public class AssessmentController {
         return ResponseEntity.ok().body("OK");
     }
 
-
-    @DeleteMapping("/update/file/{id}")
+    @DeleteMapping("/file/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable("id") Long fileId) {
         assessmentService.deleteFile(fileId);
         return ResponseEntity.ok().body("OK");

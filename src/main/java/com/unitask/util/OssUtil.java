@@ -60,6 +60,7 @@ public class OssUtil {
         fileDTO.setId(file.getId());
         fileDTO.setName(file.getName());
         fileDTO.setUrl(getObjectURL(file.getPath()).toString());
+        fileDTO.setCreatedDate(file.getCreatedDate());
         return fileDTO;
     }
 

@@ -24,7 +24,7 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
             "a.subject.color as color " +
             "from Assessment a " +
             "where (a.subject.owner.email = :email) " +
-            "OR (a.name LIKE %:search%) " +
+            "AND (a.name LIKE %:search%) " +
             "ORDER BY a.subject.id DESC")
     Page<AssessmentTuple> findBySubject_Owner_EmailAndNameLike(Pageable pageable, String email, String search );
 
