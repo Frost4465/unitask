@@ -54,6 +54,7 @@ public class AssessmentServiceImpl extends ContextService implements AssessmentS
         } else {
             map = subject.getAssessment()
                     .stream()
+                    .filter(x -> Objects.nonNull(x.getId()))
                     .collect(Collectors.toMap(x -> x.getId(), x -> x));
         }
 
