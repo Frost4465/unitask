@@ -4,6 +4,7 @@ import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentRequest;
 import com.unitask.service.AssessmentService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class AssessmentController {
 
+    @Autowired
     private final AssessmentService assessmentService;
 
     @GetMapping("/list")
