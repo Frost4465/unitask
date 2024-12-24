@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class AssessmentResponse {
 
+    private Long id;
     private String name;
     private String weightage;
     private SubjectResponse subject;
