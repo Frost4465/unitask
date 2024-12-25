@@ -1,5 +1,6 @@
 package com.unitask.controller;
 
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.service.GroupService;
 import lombok.AllArgsConstructor;
@@ -29,10 +30,14 @@ public class GroupController {
         return ResponseEntity.ok().body("OK");
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getGroup(@PathVariable("id") Long id) {
-        groupService.getGroup(id);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok().body(groupService.getGroup(id));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getAssessmentListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(groupService.getList(pageRequest));
     }
 
 

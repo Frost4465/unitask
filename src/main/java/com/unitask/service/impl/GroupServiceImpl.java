@@ -3,6 +3,7 @@ package com.unitask.service.impl;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.GroupMemberDao;
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
 import com.unitask.entity.Group;
@@ -12,10 +13,14 @@ import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
 import com.unitask.mapper.GroupMemberMapper;
 import com.unitask.service.GroupService;
+import com.unitask.util.PageUtil;
+import com.unitask.util.PageWrapperVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +67,13 @@ public class GroupServiceImpl implements GroupService {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
         }
         return GroupMapper.INSTANCE.toResponse(group);
+    }
+
+    @Override
+    public PageWrapperVO getList(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        Page<Group> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable);
+        return new PageWrapperVO(groupAssessmentTuple, groupAssessmentTuple.getContent());
     }
 
     private void updateGroup(Group group, List<Long> groupId) {
