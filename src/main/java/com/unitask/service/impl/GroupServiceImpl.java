@@ -3,6 +3,7 @@ package com.unitask.service.impl;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.GroupMemberDao;
+import com.unitask.dto.GroupMemberListDto;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
@@ -17,10 +18,10 @@ import com.unitask.util.PageUtil;
 import com.unitask.util.PageWrapperVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,20 @@ public class GroupServiceImpl implements GroupService {
     public PageWrapperVO getList(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
         Page<Group> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable);
-        return new PageWrapperVO(groupAssessmentTuple, groupAssessmentTuple.getContent());
+        List<GroupResponse> groupResponseList = groupAssessmentTuple.getContent().stream().map(group -> {
+            GroupResponse groupResponse = new GroupResponse();
+            groupResponse.setId(group.getId());
+            groupResponse.setName(group.getName());
+            groupResponse.setDescription(group.getDescription());
+            groupResponse.setGroupMemberList(group.getGroupMembers().stream().map(member -> {
+                GroupMemberListDto groupMemberListDto = new GroupMemberListDto();
+                groupMemberListDto.setId(member.getId());
+                groupMemberListDto.setName(member.getAppUser().getName());
+                return groupMemberListDto;
+            }).toList());
+            return groupResponse;
+        }).toList();
+        return new PageWrapperVO(groupAssessmentTuple, groupResponseList);
     }
 
     private void updateGroup(Group group, List<Long> groupId) {

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
 
-    @Query(value = "select g from Group g " +
-            "where (?1 is null or g.name like ?1)")
-    Page<Group> findByGroupName(String groupName, Pageable pageable);
+    @Query("select g as description from Group g where (?1 is null or g.name like ?1)")
+    Page<Group> findByName(String name, Pageable pageable);
+
 
 }

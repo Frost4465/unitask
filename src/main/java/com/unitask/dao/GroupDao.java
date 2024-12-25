@@ -34,8 +34,10 @@ public class GroupDao {
         String filter = search;
         if (StringUtils.isNotBlank(search)) {
             filter = PageUtil.likeSearch(search);
+        } else if (StringUtils.isBlank(search)) {
+            filter = null;
         }
-        return groupRepository.findByGroupName(filter, pageable);
+        return groupRepository.findByName(filter, pageable);
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class GroupResponse {
 
-    private Long Id;
+    private Long id;
     private String name;
     private String description;
     private List<GroupMemberListDto> groupMemberList;
