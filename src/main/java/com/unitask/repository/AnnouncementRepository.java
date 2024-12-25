@@ -17,10 +17,12 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
             "a.subject.name as subjectName, " +
             "a.subject.code as subjectCode, " +
             "a.description as description, " +
+            "a.postedDate as postedDate, " +
             "a.subject.color as color " +
             "FROM Announcement a " +
-            "WHERE (:ownerId IS NULL OR a.owner.Id = :ownerId)")
-    Page<AnnouncementTuple> findListing(Pageable pageable, Long ownerId);
+            "WHERE (:ownerId IS NULL OR a.owner.id = :ownerId) " +
+            "AND (:search IS NULL or a.title LIKE %:search%)")
+    Page<AnnouncementTuple> findListing(Pageable pageable, Long ownerId, String search);
 
     @Query("SELECT a.id as id, " +
             "a.title as title, " +

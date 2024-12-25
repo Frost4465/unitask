@@ -17,6 +17,7 @@ import com.unitask.util.PageUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,8 +44,12 @@ public class AnnouncementServiceImpl extends ContextService implements Announcem
     }
 
     @Override
-    public void update() {
-
+    public AnnouncementResponse update(Long id, AnnouncementRequest announcementRequest) {
+        Announcement announcement = announcementDAO.findById(id);
+        Subject subject = subjectDAO.findById(announcementRequest.getSubjectId());
+        AnnouncementMapper.INSTANCE.toEntity(announcement, announcementRequest, subject);
+        announcementDAO.save(announcement);
+        return AnnouncementMapper.INSTANCE.toResponse(announcement);
     }
 
     @Override
@@ -55,7 +60,7 @@ public class AnnouncementServiceImpl extends ContextService implements Announcem
     @Override
     public Page<AnnouncementTuple> list(PageRequest pageRequest) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
-        Pageable pageable = PageUtil.pageable(pageRequest);
-        return announcementDAO.findListing(pageable, appUser.getId());
+        Pageable pageable = PageUtil.pageable(pageRequest, Sort.by("postedDate").descending());
+        return announcementDAO.findListing(pageable, appUser.getId(), pageRequest.getSearch());
     }
 }

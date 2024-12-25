@@ -34,7 +34,7 @@ public class SubjectController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> subjectListing(PageRequest pageRequest) {
-        return ResponseEntity.ok().body(subjectService.getListing(pageRequest));
+    public ResponseEntity<?> subjectListing(PageRequest pageRequest, @RequestParam(required = false) Long subjectId) {
+        return ResponseEntity.ok().body(subjectService.getListing(pageRequest,subjectId));
     }
 }

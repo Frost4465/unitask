@@ -14,6 +14,6 @@ public interface SubjectService {
 
     SubjectResponse getSubject(Long subjectId);
 
-    PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest);
+    PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest, Long subjectId);
 
 }

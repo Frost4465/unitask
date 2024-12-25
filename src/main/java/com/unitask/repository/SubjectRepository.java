@@ -19,8 +19,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             "s.lecturerName as lecturerName " +
             "FROM Subject s " +
             "WHERE  (:search IS NULL OR s.name LIKE %:search%) " +
-            "AND (:email IS NULL OR s.owner.email = :email)"
-    )
-    Page<SubjectTuple> findListing(Pageable pageable, String email, String search);
+            "AND (:email IS NULL OR s.owner.email = :email) " +
+            "AND (:subjectId IS NULL OR s.id = :subjectId) ")
+    Page<SubjectTuple> findListing(Pageable pageable, String email, String search, Long subjectId);
 
 }

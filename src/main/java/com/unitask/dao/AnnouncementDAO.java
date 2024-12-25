@@ -35,7 +35,7 @@ public class AnnouncementDAO {
         return announcementRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, AnnouncementErrorConstant.NOT_FOUND));
     }
 
-    public Page<AnnouncementTuple> findListing(Pageable pageable, Long ownerId) {
-        return announcementRepository.findListing(pageable, ownerId);
+    public Page<AnnouncementTuple> findListing(Pageable pageable, Long ownerId,String search) {
+        return announcementRepository.findListing(pageable, ownerId, search);
     }
 }

@@ -35,7 +35,7 @@ public class SubjectDAO {
         return subjectRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, SubjectErrorConstant.NOT_FOUND));
     }
 
-    public Page<SubjectTuple> findListing(Pageable pageable, String email, String search) {
-        return subjectRepository.findListing(pageable, email, search);
+    public Page<SubjectTuple> findListing(Pageable pageable, String email, String search, Long subjectId) {
+        return subjectRepository.findListing(pageable, email, search,subjectId);
     }
 }

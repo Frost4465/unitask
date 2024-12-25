@@ -27,6 +27,11 @@ public class AnnouncementController {
         return ResponseEntity.ok().body(announcementService.read(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> read(@PathVariable Long id, @RequestBody AnnouncementRequest announcementRequest) {
+        return ResponseEntity.ok().body(announcementService.update(id, announcementRequest));
+    }
+
     @GetMapping("/list")
     public ResponseEntity<?> list(PageRequest pageRequest) {
         return ResponseEntity.ok().body(announcementService.list(pageRequest));

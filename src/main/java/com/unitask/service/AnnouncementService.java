@@ -12,7 +12,7 @@ public interface AnnouncementService {
 
     AnnouncementResponse read(Long id);
 
-    void update();
+    AnnouncementResponse update(Long id, AnnouncementRequest announcementRequest);
 
     void delete();
 

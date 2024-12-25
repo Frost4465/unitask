@@ -33,6 +33,7 @@ public class Announcement {
     @JoinColumn
     private AppUser owner;
 
+    @Column
     private LocalDateTime postedDate = LocalDateTime.now();
 
 }

@@ -60,10 +60,10 @@ public class SubjectServiceImpl extends ContextService implements SubjectService
     }
 
     @Override
-    public PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest) {
+    public PageWrapperVO<SubjectTuple> getListing(PageRequest pageRequest, Long requestId) {
         String email = getCurrentAuthUsername();
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<SubjectTuple> subjectList = subjectDAO.findListing(pageable, email, pageRequest.getSearch());
+        Page<SubjectTuple> subjectList = subjectDAO.findListing(pageable, email, pageRequest.getSearch(),requestId);
         return new PageWrapperVO<SubjectTuple>(subjectList, subjectList.getContent());
     }
 }

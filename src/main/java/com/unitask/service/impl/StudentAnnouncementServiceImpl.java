@@ -29,6 +29,6 @@ public class StudentAnnouncementServiceImpl extends ContextService implements St
     @Override
     public Page<AnnouncementTuple> list(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
-        return announcementDAO.findListing(pageable, null);
+        return announcementDAO.findListing(pageable, null, pageRequest.getSearch());
     }
 }
