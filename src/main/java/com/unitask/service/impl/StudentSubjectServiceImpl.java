@@ -89,11 +89,4 @@ public class StudentSubjectServiceImpl extends ContextService implements Student
         }
         return "OK";
     }
-
-    @Override
-    public PageWrapperVO getAssessmentListing(PageRequest pageRequest) {
-        Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<AssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable);
-        return new PageWrapperVO(studentAssessmentTuplePage, studentAssessmentTuplePage.getContent());
-    }
 }

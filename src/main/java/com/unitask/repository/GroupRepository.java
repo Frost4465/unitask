@@ -1,5 +1,7 @@
 package com.unitask.repository;
 
+import com.unitask.constant.Enum.GeneralStatus;
+import com.unitask.dto.assessment.AssessmentSubmissionTuple;
 import com.unitask.entity.Group;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("select g as description from Group g where (?1 is null or g.name like ?1)")
     Page<Group> findByName(String name, Pageable pageable);
-
 
 }

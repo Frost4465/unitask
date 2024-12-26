@@ -1,6 +1,7 @@
 package com.unitask.entity.assessment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.Subject;
@@ -44,7 +45,8 @@ public class Assessment {
     List<StudentAssessment> studentAssessments;
 
     @Column
-    private String assignmentMode;
+    @Enumerated(EnumType.STRING)
+    private AssignmentMode assignmentMode;
 
     @Column
     private LocalDate dueDate;
@@ -57,5 +59,4 @@ public class Assessment {
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
     private Set<AssessmentFile> attachedFile;
-
 }

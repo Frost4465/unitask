@@ -14,6 +14,4 @@ public interface StudentSubjectService {
     StudentSubjectResponse get(Long subjectId);
 
     String enroll(Long subjectId);
-
-    PageWrapperVO getAssessmentListing(PageRequest pageRequest);
 }

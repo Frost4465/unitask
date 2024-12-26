@@ -1,5 +1,7 @@
 package com.unitask.repository;
 
+import com.unitask.constant.Enum.GeneralStatus;
+import com.unitask.dto.assessment.AssessmentSubmissionTuple;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import org.springframework.data.domain.Page;
@@ -18,8 +20,8 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
             "s.status as status," +
             "sub.name as subjectName" +
             " from StudentAssessment s " +
-            "left join Assessment a ON s.assessment.Id = a.Id " +
-            "left join Subject sub ON a.subject.Id = sub.Id " +
+            "left join Assessment a ON s.assessment.id = a.id " +
+            "left join Subject sub ON a.subject.id = sub.id " +
             "where (?1 is null or a.name like ?1) " +
             "order by s.status DESC")
     Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);

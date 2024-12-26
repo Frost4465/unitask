@@ -21,13 +21,25 @@ public class StudentAssessment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn
     private AppUser user;
+
     @ManyToOne
     @JoinColumn
     private Assessment assessment;
+
     private LocalDate enrollmentDate;
+
     @Enumerated(EnumType.STRING)
     private GeneralStatus status;
+
+    private LocalDate submissionDate;
+
+    private String score;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
 }

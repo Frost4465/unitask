@@ -2,18 +2,15 @@ package com.unitask.service.impl;
 
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
-import com.unitask.dao.GroupMemberDao;
 import com.unitask.dto.GroupMemberListDto;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
 import com.unitask.dto.group.GroupStudentResponse;
 import com.unitask.entity.Group;
-import com.unitask.entity.GroupMember;
 import com.unitask.entity.User.AppUser;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
-import com.unitask.mapper.GroupMemberMapper;
 import com.unitask.service.GroupService;
 import com.unitask.util.PageUtil;
 import com.unitask.util.PageWrapperVO;
@@ -34,8 +31,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private GroupDao groupDao;
-    @Autowired
-    private GroupMemberDao groupMemberDao;
 
     @Autowired
     private AppUserDAO appUserDAO;
@@ -45,9 +40,10 @@ public class GroupServiceImpl implements GroupService {
         List<AppUser> appUsers = appUserDAO.findByIds(groupRequest.getGroupMemberIds());
 
         Group group = groupDao.save(GroupMapper.INSTANCE.toEntity(groupRequest));
-        groupMemberDao.saveAll(appUsers.stream().map(user -> {
-            return GroupMemberMapper.INSTANCE.toEntity(user, group);
-        }).toList());
+        //TODO FIX THIS SHIT, LINK STUDENT ASS TO GROUP
+//        groupMemberDao.saveAll(appUsers.stream().map(user -> {
+//            return GroupMemberMapper.INSTANCE.toEntity(user, group);
+//        }).toList());
     }
 
     @Override
@@ -80,12 +76,14 @@ public class GroupServiceImpl implements GroupService {
             groupResponse.setId(group.getId());
             groupResponse.setName(group.getName());
             groupResponse.setDescription(group.getDescription());
-            groupResponse.setGroupMemberList(group.getGroupMembers().stream().map(member -> {
-                GroupMemberListDto groupMemberListDto = new GroupMemberListDto();
-                groupMemberListDto.setId(member.getId());
-                groupMemberListDto.setName(member.getAppUser().getName());
-                return groupMemberListDto;
-            }).toList());
+
+            //TODO FIX THIS SHIT, LINK STUDENT ASS TO GROUP
+//            groupResponse.setGroupMemberList(group.getGroupMembers().stream().map(member -> {
+//                GroupMemberListDto groupMemberListDto = new GroupMemberListDto();
+//                groupMemberListDto.setId(member.getId());
+//                groupMemberListDto.setName(member.getAppUser().getName());
+//                return groupMemberListDto;
+//            }).toList());
             return groupResponse;
         }).toList();
         return new PageWrapperVO(groupAssessmentTuple, groupResponseList);
@@ -106,24 +104,26 @@ public class GroupServiceImpl implements GroupService {
         if (CollectionUtils.isEmpty(appUser)) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group must have at least one member");
         }
-        Map<Long, GroupMember> groupMemberHashMap =
-                group.getGroupMembers().stream().collect(Collectors.toMap(x -> x.getAppUser().getId(), x -> x));
-        List<GroupMember> groupMemberList = new ArrayList<>();
-        groupId.forEach(id -> {
-            GroupMember groupMember;
-            if (groupMemberHashMap.containsKey(id)) {
-                groupMemberList.add(groupMemberHashMap.get(id));
-                groupMemberHashMap.remove(id);
-            } else {
-                groupMember = new GroupMember();
-                AppUser user = appUserDAO.findById(id);
-                groupMember.setGroup(group);
-                groupMember.setAppUser(user);
-                groupMemberList.add(groupMember);
-            }
-        });
-        groupMemberDao.deleteAll(groupMemberHashMap.values());
-        groupMemberDao.saveAll(groupMemberList);
+
+        //TODO FIX THIS SHIT, LINK STUDENT ASS TO GROUP
+//        Map<Long, GroupMember> groupMemberHashMap =
+//                group.getGroupMembers().stream().collect(Collectors.toMap(x -> x.getAppUser().getId(), x -> x));
+//        List<GroupMember> groupMemberList = new ArrayList<>();
+//        groupId.forEach(id -> {
+//            GroupMember groupMember;
+//            if (groupMemberHashMap.containsKey(id)) {
+//                groupMemberList.add(groupMemberHashMap.get(id));
+//                groupMemberHashMap.remove(id);
+//            } else {
+//                groupMember = new GroupMember();
+//                AppUser user = appUserDAO.findById(id);
+//                groupMember.setGroup(group);
+//                groupMember.setAppUser(user);
+//                groupMemberList.add(groupMember);
+//            }
+//        });
+//        groupMemberDao.deleteAll(groupMemberHashMap.values());
+//        groupMemberDao.saveAll(groupMemberList);
 
     }
 

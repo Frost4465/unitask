@@ -29,10 +29,4 @@ public class StudentSubjectController {
     public ResponseEntity<?> enroll(@PathVariable Long id) {
         return ResponseEntity.ok().body(studentSubjectService.enroll(id));
     }
-
-    @GetMapping("/assessment/list")
-    public ResponseEntity<?> getAssessmentListing(PageRequest pageRequest) {
-        return ResponseEntity.ok().body(studentSubjectService.getAssessmentListing(pageRequest));
-    }
-
 }
