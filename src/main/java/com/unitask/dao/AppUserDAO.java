@@ -1,5 +1,6 @@
 package com.unitask.dao;
 
+import com.unitask.constant.Enum.UserRole;
 import com.unitask.constant.error.UserErrorConstant;
 import com.unitask.entity.User.AppUser;
 import com.unitask.exception.ServiceAppException;
@@ -50,5 +51,9 @@ public class AppUserDAO {
             return new ArrayList<>();
         }
         return appUserRepository.findAllByIds(ids);
+    }
+
+    public List<AppUser> findStudents(){
+        return appUserRepository.findByUserRole(UserRole.STUDENT);
     }
 }

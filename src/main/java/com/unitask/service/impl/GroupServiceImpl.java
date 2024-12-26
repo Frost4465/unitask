@@ -7,6 +7,7 @@ import com.unitask.dto.GroupMemberListDto;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
+import com.unitask.dto.group.GroupStudentResponse;
 import com.unitask.entity.Group;
 import com.unitask.entity.GroupMember;
 import com.unitask.entity.User.AppUser;
@@ -88,6 +89,16 @@ public class GroupServiceImpl implements GroupService {
             return groupResponse;
         }).toList();
         return new PageWrapperVO(groupAssessmentTuple, groupResponseList);
+    }
+
+    @Override
+    public List<GroupStudentResponse> getStudentListing() {
+        return appUserDAO.findStudents().stream().map(user -> {
+            GroupStudentResponse groupStudentResponse = new GroupStudentResponse();
+            groupStudentResponse.setId(user.getId());
+            groupStudentResponse.setName(user.getName());
+            return groupStudentResponse;
+        }).toList();
     }
 
     private void updateGroup(Group group, List<Long> groupId) {
