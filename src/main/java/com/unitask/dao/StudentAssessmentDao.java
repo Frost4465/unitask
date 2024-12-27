@@ -45,6 +45,10 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.save(assessment);
     }
 
+    public List<StudentAssessment> findByAssignment(Long id){
+        return studentAssessmentRepository.findByAssessment_Id(id);
+    }
+
     public StudentAssessment findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdAndAssessment_Id(appUserId, assessmentId);
     }

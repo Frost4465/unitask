@@ -8,7 +8,7 @@ import com.unitask.dao.StudentAssessmentDao;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
-import com.unitask.dto.group.GroupStudentResponse;
+import com.unitask.dto.group.DropdownResponse;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
@@ -121,12 +121,27 @@ public class GroupServiceImpl extends ContextService implements GroupService {
     }
 
     @Override
-    public List<GroupStudentResponse> getStudentListing() {
+    public List<DropdownResponse> getStudentListing() {
         return appUserDAO.findStudents().stream().map(user -> {
-            GroupStudentResponse groupStudentResponse = new GroupStudentResponse();
-            groupStudentResponse.setId(user.getId());
-            groupStudentResponse.setName(user.getName());
-            return groupStudentResponse;
+            DropdownResponse dropdownResponse = new DropdownResponse();
+            dropdownResponse.setId(user.getId());
+            dropdownResponse.setName(user.getName());
+            return dropdownResponse;
+        }).toList();
+    }
+
+    @Override
+    public List<DropdownResponse> getStudentAssignmentDropdown(Long id) {
+        Assessment ass = assessmentDao.findById(id);
+        List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAssignment(ass.getId());
+        if (CollectionUtils.isEmpty(studentAssessmentList)) {
+            return null;
+        }
+        return studentAssessmentList.stream().map(studentAss -> {
+            DropdownResponse dropdownResponse = new DropdownResponse();
+            dropdownResponse.setId(studentAss.getId());
+            dropdownResponse.setName(studentAss.getUser().getName());
+            return dropdownResponse;
         }).toList();
     }
 }

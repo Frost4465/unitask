@@ -35,5 +35,8 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
     @Query("select s from StudentAssessment s where s.user.id in ?1 and s.assessment.id = ?2")
     List<StudentAssessment> findByUser_IdInAndAssessment_Id(Collection<Long> ids, Long id);
 
+    @Query("select s from StudentAssessment s where s.assessment.id = ?1")
+    List<StudentAssessment> findByAssessment_Id(Long id);
+
 
 }

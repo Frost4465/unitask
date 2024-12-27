@@ -19,25 +19,25 @@ public class StudentGroupController {
     private StudentGroupService studentGroupService;
 
     @PostMapping("/join/{id}")
-    public ResponseEntity<?> joinGroup(@RequestParam("id") Long id) {
+    public ResponseEntity<?> joinGroup(@PathVariable("id") Long id) {
         studentGroupService.joinGroup(id);
         return ResponseEntity.ok().body("OK");
     }
 
     @PostMapping("/submit/{id}")
-    public ResponseEntity<?> submitGroup(@RequestParam("id") Long id, @RequestBody MultipartFile multipartFile) {
+    public ResponseEntity<?> submitGroup(@PathVariable("id") Long id, @RequestBody MultipartFile multipartFile) {
         studentGroupService.submitGroup(id, multipartFile);
         return ResponseEntity.ok().body("OK");
     }
 
     @PostMapping("/leave/{id}")
-    public ResponseEntity<?> leaveGroup(@RequestParam("id") Long id) {
+    public ResponseEntity<?> leaveGroup(@PathVariable("id") Long id) {
         studentGroupService.leaveGroup(id);
         return ResponseEntity.ok().body("OK");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getGroup(@PathVariable Long id) {
+    public ResponseEntity<?> getGroup(@RequestParam Long id) {
         return ResponseEntity.ok().body(studentGroupService.getGroup(id));
     }
 

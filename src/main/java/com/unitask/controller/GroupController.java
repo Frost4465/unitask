@@ -1,5 +1,6 @@
 package com.unitask.controller;
 
+import com.amazonaws.Response;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.service.GroupService;
@@ -43,6 +44,11 @@ public class GroupController {
     @GetMapping("/student")
     public ResponseEntity<?> getStudentListing() {
         return ResponseEntity.ok().body(groupService.getStudentListing());
+    }
+
+    @GetMapping("/studentAssignmentDropdown/{id}")
+    public ResponseEntity<?> getStudentAssignmentDropdown(@PathVariable("id")Long id) {
+        return ResponseEntity.ok().body(groupService.getStudentAssignmentDropdown(id));
     }
 
 }
