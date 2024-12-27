@@ -4,7 +4,7 @@ import com.unitask.entity.assessment.Assessment;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -31,4 +31,17 @@ public class Group {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private Set<StudentAssessment> studentAssessment;
+
+    @Column(nullable = false)
+    private String fileName;
+
+    @Column(nullable = false)
+    private String filePath;
+
+    @Column(nullable = false, unique = true)
+    private String uuid;
+
+    @Column
+    private LocalDateTime fileCreatedDate;
+
 }

@@ -42,6 +42,17 @@ public class OssUtil {
     }
 
     @SneakyThrows
+    public PutObjectResult putObject(String path, MultipartFile file) {
+        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getInputStream().available());
+        //hardcode first
+        objectMetadata.setContentType("application/octet-stream");
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        return amazonS3.putObject(ossPropertyConfig.getBucket(), path, byteArrayInputStream, objectMetadata);
+    }
+
+    @SneakyThrows
     public URL getObjectURL(String objectName) {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
@@ -102,6 +113,11 @@ public class OssUtil {
     @SneakyThrows
     public void removeObject(OssFile ossFile) {
         amazonS3.deleteObject(ossPropertyConfig.getBucket(), ossFile.getPath());
+    }
+
+    @SneakyThrows
+    public void removeObject(String path){
+        amazonS3.deleteObject(ossPropertyConfig.getBucket(), path);
     }
 
 }

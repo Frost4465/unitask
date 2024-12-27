@@ -1,9 +1,11 @@
 package com.unitask.dto.group;
 
-import com.unitask.dto.GroupMemberListDto;
+import com.unitask.dto.StudentAssessmentResponse;
+import com.unitask.dto.assessment.AssessmentResponse;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -13,6 +15,11 @@ public class GroupResponse {
     private Long id;
     private String name;
     private String description;
-    private List<GroupMemberListDto> groupMemberList;
+    private AssessmentResponse assessment;
+    private List<StudentAssessmentResponse> studentAssessment;
+    private String fileName;
+    private String filePath;
+    private LocalDateTime fileCreatedDate;
+
 
 }

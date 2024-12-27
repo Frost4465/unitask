@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
+
 @Repository
 public interface StudentAssessmentRepository extends JpaRepository<StudentAssessment, Long> {
 
@@ -25,4 +28,12 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
             "where (?1 is null or a.name like ?1) " +
             "order by s.status DESC")
     Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);
+
+    @Query("select s from StudentAssessment s where s.user.id = ?1 and s.assessment.id = ?2")
+    StudentAssessment findByUser_IdAndAssessment_Id(Long id, Long id1);
+
+    @Query("select s from StudentAssessment s where s.user.id in ?1 and s.assessment.id = ?2")
+    List<StudentAssessment> findByUser_IdInAndAssessment_Id(Collection<Long> ids, Long id);
+
+
 }

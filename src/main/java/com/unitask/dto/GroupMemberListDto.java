@@ -1,13 +1,16 @@
 package com.unitask.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Data
 public class GroupMemberListDto {
 
     private Long id;
     private String name;
+    private LocalDate enrollmentDate;
+    private LocalDate submissionDate;
+    private String score;
 
 }

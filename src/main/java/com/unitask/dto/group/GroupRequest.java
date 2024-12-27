@@ -11,6 +11,7 @@ public class GroupRequest {
 
     private String name;
     private String description;
-    private List<Long> groupMemberIds;
+    private List<Long> members;
+    private Long assessmentId;
 
 }

@@ -44,4 +44,13 @@ public class StudentAssessmentDao {
     public StudentAssessment save(StudentAssessment assessment) {
         return studentAssessmentRepository.save(assessment);
     }
+
+    public StudentAssessment findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
+        return studentAssessmentRepository.findByUser_IdAndAssessment_Id(appUserId, assessmentId);
+    }
+
+    public List<StudentAssessment> findByAssessmentAndAppUserList(List<Long> appUserIdList, Long assessmentId) {
+        return studentAssessmentRepository.findByUser_IdInAndAssessment_Id(appUserIdList, assessmentId);
+    }
+
 }
