@@ -22,7 +22,7 @@ public class AssessmentSubmission {
     private Long id;
 
     @ManyToOne
-    @JoinColumn (nullable = false)
+    @JoinColumn(nullable = false)
     private Assessment assessment;
 
     //optional if group
@@ -36,4 +36,6 @@ public class AssessmentSubmission {
     private StudentAssessment studentAssessment;
 
     private LocalDateTime submissionDate;
+
+    private Boolean resubmit;
 }

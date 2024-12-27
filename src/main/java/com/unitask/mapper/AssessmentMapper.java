@@ -1,18 +1,28 @@
 package com.unitask.mapper;
 
+import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.dto.assessment.AssessmentRequest;
 import com.unitask.dto.assessment.AssessmentResponse;
+import com.unitask.dto.assessment.AssessmentSubmissionMemberResponse;
+import com.unitask.dto.assessment.AssessmentSubmissionResponse;
+import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.assessment.AssessmentMarkingRubric;
+import com.unitask.entity.assessment.AssessmentSubmission;
 import com.unitask.util.OssUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @Mapper(uses = OssUtil.class)
 public interface AssessmentMapper {
     AssessmentMapper INSTANCE = Mappers.getMapper(AssessmentMapper.class);
 
+    @Named("toAssessmentResponse")
     @Mapping(target = "attachedFile", ignore = true)
     @Mapping(target = "subject.assessment", ignore = true)
     AssessmentResponse toResponse(Assessment assessment);
@@ -33,5 +43,34 @@ public interface AssessmentMapper {
                 assessmentMarkingRubric.setAssessment(assessment);
             }
         }
+    }
+
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "submittedDocuments", ignore = true)
+    @Mapping(target = "groupMember", ignore = true)
+    @Mapping(target = "assessment", source = "assessmentSubmission.assessment", qualifiedByName = "toAssessmentResponse")
+    @BeanMapping(qualifiedByName = "afterResponse")
+    AssessmentSubmissionResponse toResponse(AssessmentSubmission assessmentSubmission);
+
+    @Named("afterResponse")
+    @AfterMapping
+    default void update(@MappingTarget AssessmentSubmissionResponse response, AssessmentSubmission assessmentSubmission) {
+        if (assessmentSubmission.getAssessment().getAssignmentMode().equals(AssignmentMode.INDIVIDUAL)) {
+            response.setName(assessmentSubmission.getStudentAssessment().getUser().getName());
+        } else {
+            response.setName(assessmentSubmission.getGroup().getName());
+        }
+
+        List<AssessmentSubmissionMemberResponse> list = new ArrayList<>();
+        if (Objects.nonNull(assessmentSubmission.getGroup())) {
+            for (StudentAssessment studentAssessment : assessmentSubmission.getGroup().getStudentAssessment()) {
+                AssessmentSubmissionMemberResponse member = new AssessmentSubmissionMemberResponse();
+                member.setId(studentAssessment.getId());
+                member.setName(studentAssessment.getUser().getName());
+                member.setScore(studentAssessment.getScore());
+                list.add(member);
+            }
+        }
+        response.setGroupMember(list);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssessmentSubmissionRepository extends JpaRepository<AssessmentSubmission, Long> {
     @Query("select asub.id as id," +
-            "ass.name as name," +
+            "ass.name as assignmentName," +
             "asub.submissionDate as submissionDate," +
             "g.name as groupName," +
             "sub.name as subjectName, " +

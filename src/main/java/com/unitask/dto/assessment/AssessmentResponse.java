@@ -1,5 +1,6 @@
 package com.unitask.dto.assessment;
 
+import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.dto.FileResponse;
 import com.unitask.dto.subject.SubjectResponse;
 import lombok.Data;
@@ -14,7 +15,7 @@ public class AssessmentResponse {
     private String name;
     private String weightage;
     private SubjectResponse subject;
-    private String assignmentMode;
+    private AssignmentMode assignmentMode;
     private LocalDate dueDate;
     private String lecturerInstruction;
     private List<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
