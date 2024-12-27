@@ -70,6 +70,7 @@ public class AssessmentServiceImpl extends ContextService implements AssessmentS
                 assessment = new Assessment();
             }
             assessment.setName(dto.getName());
+            assessment.setAssignmentMode(dto.getAssignmentMode());
             assessment.setWeightage(dto.getWeightage());
             assessment.setSubject(subject);
             assessment.setGeneralStatus(GeneralStatus.ACTIVE);
