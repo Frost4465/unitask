@@ -48,6 +48,7 @@ public class UserMapper {
         ProfileResponse profileResponse = new ProfileResponse();
         profileResponse.setName(appUser.getName());
         profileResponse.setId(appUser.getId());
+        profileResponse.setEmail(appUser.getEmail());
         return profileResponse;
     }
 }
