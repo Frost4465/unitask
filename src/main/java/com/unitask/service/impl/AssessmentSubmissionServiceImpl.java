@@ -5,6 +5,7 @@ import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.AssessmentSubmissionDAO;
 import com.unitask.dao.StudentAssessmentDao;
+import com.unitask.dto.AssessmentSubmissionPageRequest;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentGradeRequest;
 import com.unitask.dto.assessment.AssessmentSubmissionResponse;
@@ -35,10 +36,11 @@ public class AssessmentSubmissionServiceImpl extends ContextService implements A
     private final OssUtil ossUtil;
 
     @Override
-    public Page<AssessmentSubmissionTuple> getListing(PageRequest pageRequest) {
+    public Page<AssessmentSubmissionTuple> getListing(AssessmentSubmissionPageRequest assessmentSubmissionPageRequest) {
+        PageRequest pageRequest = new PageRequest(assessmentSubmissionPageRequest.getPage(), assessmentSubmissionPageRequest.getPageSize(), assessmentSubmissionPageRequest.getSearch(), assessmentSubmissionPageRequest.getSort());
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Pageable pageable = PageUtil.pageable(pageRequest);
-        return assessmentSubmissionDAO.getAssessmentSubmissionListing(appUser.getId(), pageable);
+        return assessmentSubmissionDAO.getAssessmentSubmissionListing(appUser.getId(), assessmentSubmissionPageRequest.getAssignmentName(), assessmentSubmissionPageRequest.getGroupName(), assessmentSubmissionPageRequest.getSubjectCode(), assessmentSubmissionPageRequest.getBeforeDate(), assessmentSubmissionPageRequest.getAfterDate(), pageable);
     }
 
     @Override

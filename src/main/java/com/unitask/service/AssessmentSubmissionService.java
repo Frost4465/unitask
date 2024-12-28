@@ -1,5 +1,6 @@
 package com.unitask.service;
 
+import com.unitask.dto.AssessmentSubmissionPageRequest;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentGradeRequest;
 import com.unitask.dto.assessment.AssessmentSubmissionResponse;
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Page;
 
 public interface AssessmentSubmissionService {
 
-    Page<AssessmentSubmissionTuple> getListing(PageRequest pageRequest);
+    Page<AssessmentSubmissionTuple> getListing(AssessmentSubmissionPageRequest pageRequest);
 
     AssessmentSubmissionResponse read(Long id);
 

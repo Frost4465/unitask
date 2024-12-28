@@ -1,5 +1,6 @@
 package com.unitask.controller;
 
+import com.unitask.dto.AssessmentSubmissionPageRequest;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentGradeRequest;
 import com.unitask.service.AssessmentSubmissionService;
@@ -17,7 +18,7 @@ public class AssessmentSubmissionController {
     private final AssessmentSubmissionService assessmentSubmissionService;
 
     @GetMapping("/list")
-    public ResponseEntity<?> getListing(PageRequest pageRequest) {
+    public ResponseEntity<?> getListing(AssessmentSubmissionPageRequest pageRequest) {
         return ResponseEntity.ok().body(assessmentSubmissionService.getListing(pageRequest));
     }
 
