@@ -20,5 +20,6 @@ public class AssessmentResponse {
     private String lecturerInstruction;
     private List<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
     private List<FileResponse> attachedFile;
+    private Long maxMember;
 
 }

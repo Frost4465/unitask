@@ -9,8 +9,6 @@ public class GroupMemberListDto {
 
     private Long id;
     private String name;
-    private LocalDate enrollmentDate;
-    private LocalDate submissionDate;
     private String score;
 
 }

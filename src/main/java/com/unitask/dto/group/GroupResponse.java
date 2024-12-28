@@ -1,5 +1,6 @@
 package com.unitask.dto.group;
 
+import com.unitask.dto.GroupMemberListDto;
 import com.unitask.dto.StudentAssessmentResponse;
 import com.unitask.dto.assessment.AssessmentResponse;
 import lombok.Getter;
@@ -16,10 +17,10 @@ public class GroupResponse {
     private String name;
     private String description;
     private AssessmentResponse assessment;
-    private List<StudentAssessmentResponse> studentAssessment;
+    private List<GroupMemberListDto> groupMembers;
     private String fileName;
     private String filePath;
     private LocalDateTime fileCreatedDate;
-
-
+    private Boolean locked;
+    private Boolean openForPublic;
 }

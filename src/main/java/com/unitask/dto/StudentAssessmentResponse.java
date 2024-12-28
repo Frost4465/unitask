@@ -19,5 +19,4 @@ public class StudentAssessmentResponse {
     private LocalDate submissionDate;
     private String score;
 
-
 }

@@ -3,6 +3,7 @@ package com.unitask.dao;
 import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dto.assessment.AssessmentSubmissionTuple;
 import com.unitask.dto.assessment.AssessmentTuple;
+import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.repository.GroupRepository;
 import com.unitask.util.PageUtil;
@@ -32,13 +33,7 @@ public class GroupDao {
         return groupRepository.findById(id).orElse(null);
     }
 
-    public Page<Group> getList(String search, Pageable pageable) {
-        String filter = search;
-        if (StringUtils.isNotBlank(search)) {
-            filter = PageUtil.likeSearch(search);
-        } else if (StringUtils.isBlank(search)) {
-            filter = null;
-        }
-        return groupRepository.findByName(filter, pageable);
+    public Page<GroupTuple> getList(String search, Pageable pageable) {
+        return groupRepository.findByName(search, pageable);
     }
 }

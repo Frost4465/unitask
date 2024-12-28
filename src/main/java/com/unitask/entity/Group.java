@@ -44,4 +44,10 @@ public class Group {
     @Column
     private LocalDateTime fileCreatedDate;
 
+    @Column
+    private Boolean openForPublic = false;
+
+    @Column
+    private Boolean locked = false;
+
 }

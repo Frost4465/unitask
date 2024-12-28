@@ -15,4 +15,7 @@ public class AssessmentRequest {
     private LocalDate dueDate;
     private String lecturerInstruction;
     private Set<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
+    private LocalDate startDate;
+    private Long maxMember;
+
 }

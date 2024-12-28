@@ -6,9 +6,10 @@ import com.unitask.dao.AssessmentDao;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.StudentAssessmentDao;
 import com.unitask.dto.PageRequest;
+import com.unitask.dto.group.DropdownResponse;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
-import com.unitask.dto.group.DropdownResponse;
+import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
@@ -18,7 +19,6 @@ import com.unitask.mapper.GroupMapper;
 import com.unitask.service.ContextService;
 import com.unitask.service.GroupService;
 import com.unitask.util.PageUtil;
-import com.unitask.util.PageWrapperVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,6 +77,8 @@ public class GroupServiceImpl extends ContextService implements GroupService {
         }
         group.setName(groupRequest.getName());
         group.setDescription(groupRequest.getDescription());
+        group.setOpenForPublic(groupRequest.getOpenForPublic());
+        group.setLocked(groupRequest.getLocked());
         Group savedGroup = groupDao.save(group);
         Set<StudentAssessment> studentAssessmentSet = group.getStudentAssessment();
         Map<Long, StudentAssessment> studentAssessmentMap =
@@ -114,10 +116,10 @@ public class GroupServiceImpl extends ContextService implements GroupService {
     }
 
     @Override
-    public PageWrapperVO getList(PageRequest pageRequest) {
+    public Page<GroupTuple> getList(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<Group> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable);
-        return new PageWrapperVO(groupAssessmentTuple, GroupMapper.INSTANCE.toResponseList(groupAssessmentTuple.getContent()));
+        Page<GroupTuple> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable);
+        return groupAssessmentTuple;
     }
 
     @Override

@@ -13,5 +13,7 @@ public class GroupRequest {
     private String description;
     private List<Long> members;
     private Long assessmentId;
+    private Boolean openForPublic;
+    private Boolean locked;
 
 }

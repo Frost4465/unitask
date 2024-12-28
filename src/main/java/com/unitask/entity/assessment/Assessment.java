@@ -59,4 +59,8 @@ public class Assessment {
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
     private Set<AssessmentFile> attachedFile;
+
+    private LocalDate startDate;
+
+    private Long maxMember;
 }

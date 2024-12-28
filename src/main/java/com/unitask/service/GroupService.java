@@ -1,10 +1,11 @@
 package com.unitask.service;
 
 import com.unitask.dto.PageRequest;
+import com.unitask.dto.group.DropdownResponse;
 import com.unitask.dto.group.GroupRequest;
 import com.unitask.dto.group.GroupResponse;
-import com.unitask.dto.group.DropdownResponse;
-import com.unitask.util.PageWrapperVO;
+import com.unitask.dto.group.GroupTuple;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,9 +17,10 @@ public interface GroupService {
 
     GroupResponse getGroup(Long id);
 
-    PageWrapperVO getList(PageRequest pageRequest);
+    Page<GroupTuple> getList(PageRequest pageRequest);
 
     List<DropdownResponse> getStudentListing();
+
     List<DropdownResponse> getStudentAssignmentDropdown(Long id);
 
 }

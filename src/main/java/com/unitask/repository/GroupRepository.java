@@ -1,7 +1,6 @@
 package com.unitask.repository;
 
-import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.dto.assessment.AssessmentSubmissionTuple;
+import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,13 @@ import org.springframework.stereotype.Repository;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
 
-    @Query("select g as description from Group g where (?1 is null or g.name like ?1)")
-    Page<Group> findByName(String name, Pageable pageable);
+    @Query("select g.id as id," +
+            "g.assessment.subject.code as subjectCode, " +
+            "g.assessment.name as assignmentName," +
+            "g.assessment.maxMember as maxMember," +
+            "g.name as groupName," +
+            "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
+            "from Group g where (:name is null or g.name like %:name%)")
+    Page<GroupTuple> findByName(String name, Pageable pageable);
 
 }
