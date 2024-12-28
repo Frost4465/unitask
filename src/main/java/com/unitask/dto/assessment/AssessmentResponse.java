@@ -21,5 +21,5 @@ public class AssessmentResponse {
     private List<AssessmentMarkingRubricDto> assessmentMarkingRubrics;
     private List<FileResponse> attachedFile;
     private Long maxMember;
-
+    private LocalDate startDate;
 }
