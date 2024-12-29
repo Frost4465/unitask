@@ -40,13 +40,14 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     public TaskResponse createTask(TaskRequest taskRequest) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Assessment assessment = null;
+        Optional<StudentAssessment> studentAssessment = Optional.empty();
         if (taskRequest.getAssignmentId() != null) {
             assessment = assessmentDao.findById(taskRequest.getAssignmentId());
             if (assessment == null) {
                 throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Assessment does not Exists");
             }
+            studentAssessment = studentAssessmentDao.findByAssessmentAndAppUser(appUser.getId(), assessment.getId());
         }
-        Optional<StudentAssessment> studentAssessment = studentAssessmentDao.findByAssessmentAndAppUser(appUser.getId(), assessment.getId());
 
         Task task = new Task();
         task.setAssessment(assessment);
