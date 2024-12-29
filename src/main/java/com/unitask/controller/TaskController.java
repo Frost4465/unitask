@@ -17,8 +17,7 @@ public class TaskController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createTask(@RequestBody TaskRequest taskRequest) {
-        taskService.createTask(taskRequest);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok().body(taskService.createTask(taskRequest));
     }
 
     @PutMapping("/update/{id}")
@@ -49,7 +48,7 @@ public class TaskController {
         return ResponseEntity.ok().body(taskService.getTaskList(checked));
     }
 
-    @GetMapping("/groupList")
+    @GetMapping("/list/group")
     public ResponseEntity<?> getGroupTask(@RequestParam Boolean checked) {
         return ResponseEntity.ok().body(taskService.getGroupTask(checked));
     }
