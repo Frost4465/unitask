@@ -16,7 +16,7 @@ public class StudentAssessmentController {
 
     private final StudentAssessmentService studentAssessmentService;
 
-    @GetMapping("/assessment/list")
+    @GetMapping("/list")
     public ResponseEntity<?> getAssessmentListing(PageRequest pageRequest) {
         return ResponseEntity.ok().body(studentAssessmentService.getAssessmentListing(pageRequest));
     }

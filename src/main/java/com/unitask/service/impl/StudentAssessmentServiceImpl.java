@@ -1,19 +1,21 @@
 package com.unitask.service.impl;
 
+import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.AssessmentSubmissionDAO;
 import com.unitask.dao.StudentAssessmentDao;
 import com.unitask.dto.AssessmentSubmissionResponse;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
+import com.unitask.entity.User.AppUser;
 import com.unitask.entity.assessment.AssessmentSubmission;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.StudentAssessmentMapper;
+import com.unitask.service.ContextService;
 import com.unitask.service.StudentAssessmentService;
 import com.unitask.util.PageUtil;
 import com.unitask.util.PageWrapperVO;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,17 +27,17 @@ import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
-public class StudentAssessmentServiceImpl implements StudentAssessmentService {
+public class StudentAssessmentServiceImpl extends ContextService implements StudentAssessmentService {
 
-    @Autowired
     private final StudentAssessmentDao studentAssessmentDao;
-    @Autowired
+    private final AppUserDAO appUserDAO;
     private final AssessmentSubmissionDAO assessmentSubmissionDAO;
 
     @Override
     public PageWrapperVO getAssessmentListing(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<AssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable);
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Page<AssessmentTuple> studentAssessmentTuplePage = studentAssessmentDao.getAssessmentListing(pageRequest.getSearch(), pageable, appUser.getId());
         return new PageWrapperVO(studentAssessmentTuplePage, studentAssessmentTuplePage.getContent());
     }
 

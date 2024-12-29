@@ -21,8 +21,22 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "g.assessment.maxMember as maxMember," +
             "g.name as groupName," +
             "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
-            "from Group g where (:name is null or g.name like %:name%)")
-    Page<GroupTuple> findByName(String name, Pageable pageable);
+            "from Group g where (:name is null or g.name like %:name%) " +
+            "AND g.assessment.subject.owner.id = :subjectOwner ")
+    Page<GroupTuple> findLecturerGroup(String name, Pageable pageable, Long subjectOwner);
+
+    @Query("select g.id as id," +
+            "g.assessment.subject.code as subjectCode, " +
+            "g.assessment.name as assignmentName," +
+            "g.assessment.maxMember as maxMember," +
+            "g.name as groupName," +
+            "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
+            "from Group g  " +
+            "LEFT JOIN g.studentAssessment ga " +
+            "WHERE ga.user.id = :userId " +
+            "AND (:name is null or g.name like %:name%)")
+    Page<GroupTuple> findMyGroup(String name, Pageable pageable, Long userId);
+
 
     @Query("select g from Group g inner join g.studentAssessment studentAssessment where studentAssessment.user.id = ?1")
     List<Group> findByStudentAssessment_User_Id(Long id);
