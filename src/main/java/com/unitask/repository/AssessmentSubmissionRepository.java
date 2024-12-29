@@ -53,8 +53,8 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
             "  AND a.group_id IS NULL\n" +
             "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
             "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
-            "  AND (:beforeDate < a.submission_date)\n" +
-            "  AND (:afterDate > a.submission_date);", nativeQuery = true)
+            "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
+            "  AND (:afterDate is null or :afterDate > a.submission_date);", nativeQuery = true)
     Page<AssessmentSubmission> findByGroupIdUnionIndividual(@Param("groupId") List<Long> groupId, @Param("userId") Long userId,
                                                             @Param("assName") String assName, @Param("subName") String subName,
                                                             @Param("beforeDate") LocalDateTime beforeDate, @Param("afterDate") LocalDateTime afterDate, Pageable pageable);
