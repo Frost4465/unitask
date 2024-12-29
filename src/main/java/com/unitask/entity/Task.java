@@ -25,7 +25,7 @@ public class Task {
     @ManyToOne
     @JoinColumn
     private AppUser user;
-    @Column(name = "checked", columnDefinition = "0")
+    @Column(name = "checked")
     private boolean checked;
 
 }

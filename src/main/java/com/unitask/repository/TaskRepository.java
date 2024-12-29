@@ -1,6 +1,5 @@
 package com.unitask.repository;
 
-import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
