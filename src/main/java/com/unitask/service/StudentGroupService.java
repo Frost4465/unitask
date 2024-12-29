@@ -24,5 +24,6 @@ public interface StudentGroupService {
 
     Page<GroupTuple> getList(PageRequest pageRequest);
 
+    List<GroupTuple> getGroupList();
 
 }

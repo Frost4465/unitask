@@ -42,4 +42,8 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
             "WHERE user.id IN :ids ")
     List<StudentAssessment> findAllByIds(@Param("ids") Collection<Long> ids);
 
+    @Query("select s from StudentAssessment s where s.user.id = ?1 and s.group is null")
+    List<StudentAssessment> findByUser_IdAndGroupNull(Long id);
+
+
 }

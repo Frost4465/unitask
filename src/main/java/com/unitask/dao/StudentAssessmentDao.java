@@ -4,8 +4,6 @@ import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.StudentAssessmentRepository;
-import com.unitask.util.PageUtil;
-import io.micrometer.common.util.StringUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +30,7 @@ public class StudentAssessmentDao {
     }
 
     public Page<AssessmentTuple> getAssessmentListing(String search, Pageable pageable, Long userId) {
-        return studentAssessmentRepository.findByAssessment_NameOrderByStatusDesc(search, pageable,userId);
+        return studentAssessmentRepository.findByAssessment_NameOrderByStatusDesc(search, pageable, userId);
     }
 
     public StudentAssessment findById(Long id) {
@@ -60,6 +58,10 @@ public class StudentAssessmentDao {
             return new ArrayList<>();
         }
         return studentAssessmentRepository.findAllByIds(ids);
+    }
+
+    public List<StudentAssessment> findByAppUserAndGroupNull(Long id) {
+        return studentAssessmentRepository.findByUser_IdAndGroupNull(id);
     }
 
 }

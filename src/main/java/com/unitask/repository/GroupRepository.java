@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -46,5 +47,14 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("select sa.user.id as id, sa.user.name as name FROM StudentAssessment sa WHERE sa.group.id = :groupId ")
     List<GroupMemberTuple> findMember(Long groupId);
+
+    @Query("select g.id as id," +
+            "g.assessment.subject.code as subjectCode, " +
+            "g.assessment.name as assignmentName," +
+            "g.assessment.maxMember as maxMember," +
+            "g.name as groupName," +
+            "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
+            "from Group g where g.assessment.id in ?1")
+    List<GroupTuple> findByAssessment_IdIn(Collection<Long> ids);
 
 }

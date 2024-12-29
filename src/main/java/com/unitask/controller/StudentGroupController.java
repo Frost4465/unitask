@@ -52,4 +52,9 @@ public class StudentGroupController {
         return ResponseEntity.ok().body(studentGroupService.getList(pageRequest));
     }
 
+    @GetMapping("/groupListing")
+    public ResponseEntity<?> groupListing(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(studentGroupService.getGroupList());
+    }
+
 }

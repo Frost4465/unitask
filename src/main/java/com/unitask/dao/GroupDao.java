@@ -51,4 +51,8 @@ public class GroupDao {
         return groupRepository.findMember(groupId);
     }
 
+    public List<GroupTuple> findByAssessmentId(List<Long> ids){
+        return groupRepository.findByAssessment_IdIn(ids);
+    }
+
 }

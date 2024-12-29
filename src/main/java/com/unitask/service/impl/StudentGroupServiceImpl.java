@@ -10,6 +10,7 @@ import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
+import com.unitask.entity.assessment.Assessment;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
 import com.unitask.service.ContextService;
@@ -117,5 +118,13 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Page<GroupTuple> groupAssessmentTuple = groupDao.findMyGroup(pageRequest.getSearch(), pageable, appUser.getId());
         return groupAssessmentTuple;
+    }
+
+    @Override
+    public List<GroupTuple> getGroupList() {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAppUserAndGroupNull(appUser.getId());
+        List<Long> assessmentId = studentAssessmentList.stream().map(StudentAssessment::getAssessment).map(Assessment::getId).distinct().toList();
+        return groupDao.findByAssessmentId(assessmentId);
     }
 }
