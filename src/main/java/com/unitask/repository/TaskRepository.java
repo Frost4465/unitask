@@ -1,6 +1,5 @@
 package com.unitask.repository;
 
-import com.unitask.entity.Group;
 import com.unitask.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,16 +9,12 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    @Query("select t from Task t where t.user.id = ?1")
-    List<Task> findByUser_Id(Long id);
+    @Query("select t from Task t where t.user.id = :id AND t.checked = :checked ")
+    List<Task> findByUser_Id(Long id, Boolean checked);
 
     @Query("select t from Task t where t.assessment.id in ?1")
     List<Task> findByAssessment_IdIn(Collection<Long> ids);
 
-    @Query("""
-            select t from Task t inner join t.assessment.studentAssessments studentAssessments
-            where studentAssessments.group.id in ?1 and t.assessment.id in ?2""")
-    List<Task> findByAssessment_StudentAssessments_Group_IdInAndAssessment_IdIn(Collection<Long> ids, Collection<Long> ids1);
-
-
+    @Query("select t from Task t where t.group.id in :ids AND t.checked = :check")
+    List<Task> findByGroup_IdIn(Collection<Long> ids, Boolean check);
 }

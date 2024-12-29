@@ -21,12 +21,16 @@ public class TaskDao {
         return taskRepository.findById(id).orElse(null);
     }
 
-    public List<Task> findByUserId(Long id) {
-        return taskRepository.findByUser_Id(id);
+    public List<Task> findByUserId(Long id, Boolean check) {
+        return taskRepository.findByUser_Id(id, check);
     }
 
     public List<Task> findByAssessmentsAndGroupId(List<Long> groupIds, List<Long> assessmentIds) {
         return taskRepository.findByAssessment_StudentAssessments_Group_IdInAndAssessment_IdIn(groupIds, assessmentIds);
+    }
+
+    public List<Task> findByGroup(Collection<Long> ids, Boolean check) {
+        return taskRepository.findByGroup_IdIn(ids, check);
     }
 
 }

@@ -6,15 +6,17 @@ import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.StudentAssessmentRepository;
 import com.unitask.util.PageUtil;
 import io.micrometer.common.util.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentAssessmentDao {
@@ -45,15 +47,23 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.save(assessment);
     }
 
-    public List<StudentAssessment> findByAssignment(Long id){
+    public List<StudentAssessment> findByAssignment(Long id) {
         return studentAssessmentRepository.findByAssessment_Id(id);
     }
 
-    public StudentAssessment findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
+    public Optional<StudentAssessment> findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdAndAssessment_Id(appUserId, assessmentId);
     }
 
     public List<StudentAssessment> findByAssessmentAndAppUserList(List<Long> appUserIdList, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdInAndAssessment_Id(appUserIdList, assessmentId);
     }
+
+    public List<StudentAssessment> findByIds(Collection<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
+        return studentAssessmentRepository.findAllByIds(ids);
+    }
+
 }

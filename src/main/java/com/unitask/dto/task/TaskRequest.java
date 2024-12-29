@@ -8,7 +8,8 @@ import lombok.Setter;
 public class TaskRequest {
 
     private String name;
-    private Long assigmentId;
+    private Long assignmentId;
+    private Long assignedId;
     private Boolean checked;
 
 }

@@ -1,6 +1,5 @@
 package com.unitask.service.impl;
 
-import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.AssessmentDao;
 import com.unitask.dao.GroupDao;
@@ -12,7 +11,6 @@ import com.unitask.dto.group.GroupResponse;
 import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
-import com.unitask.entity.User.AppUser;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
@@ -26,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +45,6 @@ public class GroupServiceImpl extends ContextService implements GroupService {
 
     @Override
     public void createGroup(GroupRequest groupRequest) {
-        List<AppUser> appUserList = appUserDAO.findByIds(groupRequest.getMembers());
         Assessment assessment = assessmentDao.findById(groupRequest.getAssessmentId());
         Group group = new Group();
         group.setName(groupRequest.getName());
@@ -67,8 +63,8 @@ public class GroupServiceImpl extends ContextService implements GroupService {
 
     @Override
     public void updateGroup(Long id, GroupRequest groupRequest) {
-        List<AppUser> appUserList = appUserDAO.findByIds(groupRequest.getMembers());
-        if (CollectionUtils.isEmpty(appUserList)) {
+        Map<Long, StudentAssessment> request = studentAssessmentDao.findByIds(groupRequest.getMembers()).stream().collect(Collectors.toMap(StudentAssessment::getId, x -> x));
+        if (CollectionUtils.isEmpty(request.keySet())) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group must have at least one member");
         }
         Group group = groupDao.findById(id);
@@ -79,30 +75,25 @@ public class GroupServiceImpl extends ContextService implements GroupService {
         group.setDescription(groupRequest.getDescription());
         group.setOpenForPublic(groupRequest.getOpenForPublic());
         group.setLocked(groupRequest.getLocked());
-        Group savedGroup = groupDao.save(group);
+        groupDao.save(group);
+
         Set<StudentAssessment> studentAssessmentSet = group.getStudentAssessment();
-        Map<Long, StudentAssessment> studentAssessmentMap =
-                studentAssessmentSet.stream().collect(Collectors.toMap(x -> x.getUser().getId(), x -> x));
-        Map<Long, AppUser> appUserMap = appUserList.stream().collect(Collectors.toMap(AppUser::getId, x -> x));
+        Map<Long, StudentAssessment> existingValue = studentAssessmentSet.stream().collect(Collectors.toMap(StudentAssessment::getId, x -> x));
+
         List<StudentAssessment> studentAssessmentList = new ArrayList<>();
         groupRequest.getMembers().forEach(memberId -> {
-            if (studentAssessmentMap.containsKey(memberId)) {
-                studentAssessmentList.add(studentAssessmentMap.get(memberId));
-                studentAssessmentMap.remove(memberId);
+            StudentAssessment studentAssessment;
+            if (existingValue.containsKey(memberId)) {
+                //old member
+                existingValue.remove(memberId);
             } else {
-                StudentAssessment studentAssessment = new StudentAssessment();
-                studentAssessment.setUser(appUserMap.get(memberId));
-                studentAssessment.setAssessment(savedGroup.getAssessment());
-                studentAssessment.setGroup(savedGroup);
-                studentAssessment.setStatus(GeneralStatus.ACTIVE);
-                studentAssessment.setEnrollmentDate(LocalDate.now());
+                //new member
+                studentAssessment = request.get(memberId);
+                studentAssessment.setGroup(group);
+                studentAssessmentList.add(studentAssessment);
             }
         });
-        studentAssessmentList.addAll(
-                studentAssessmentMap.values().stream().map(studentAss -> {
-                    studentAss.setGroup(null);
-                    return studentAss;
-                }).toList());
+        studentAssessmentList.addAll(existingValue.values().stream().peek(studentAss -> studentAss.setGroup(null)).toList());
         studentAssessmentDao.saveAll(studentAssessmentList);
     }
 
