@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
@@ -20,5 +22,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
             "from Group g where (:name is null or g.name like %:name%)")
     Page<GroupTuple> findByName(String name, Pageable pageable);
+
+    @Query("select g from Group g inner join g.studentAssessment studentAssessment where studentAssessment.user.id = ?1")
+    List<Group> findByStudentAssessment_User_Id(Long id);
+
 
 }

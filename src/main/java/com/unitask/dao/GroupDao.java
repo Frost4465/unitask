@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GroupDao {
 
@@ -36,4 +38,9 @@ public class GroupDao {
     public Page<GroupTuple> getList(String search, Pageable pageable) {
         return groupRepository.findByName(search, pageable);
     }
+
+    public List<Group> findByUserId(Long id){
+        return groupRepository.findByStudentAssessment_User_Id(id);
+    }
+
 }
