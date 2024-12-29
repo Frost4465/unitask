@@ -41,5 +41,8 @@ public class StudentGroupController {
         return ResponseEntity.ok().body(studentGroupService.getGroup(id));
     }
 
-
+    @GetMapping("/{assessmentId}/members")
+    public ResponseEntity<?> getGroupMember(@PathVariable Long assessmentId) {
+        return ResponseEntity.ok().body(studentGroupService.getGroupList(assessmentId));
+    }
 }

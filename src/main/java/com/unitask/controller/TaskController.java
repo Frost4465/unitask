@@ -33,6 +33,11 @@ public class TaskController {
         return ResponseEntity.ok().body("OK");
     }
 
+    @PostMapping("/unchecked/{id}")
+    public ResponseEntity<?> uncheckTask(@PathVariable("id") Long id) {
+        taskService.uncheckTask(id);
+        return ResponseEntity.ok().body("OK");
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTask(@PathVariable("id") Long id) {
@@ -40,12 +45,12 @@ public class TaskController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getMyTask() {
-        return ResponseEntity.ok().body(taskService.getTaskList());
+    public ResponseEntity<?> getMyTask(@RequestParam Boolean checked) {
+        return ResponseEntity.ok().body(taskService.getTaskList(checked));
     }
 
     @GetMapping("/groupList")
-    public ResponseEntity<?> getGroupTask() {
-        return ResponseEntity.ok().body(taskService.getGroupTask());
+    public ResponseEntity<?> getGroupTask(@RequestParam Boolean checked) {
+        return ResponseEntity.ok().body(taskService.getGroupTask(checked));
     }
 }

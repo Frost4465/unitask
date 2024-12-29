@@ -1,5 +1,6 @@
 package com.unitask.repository;
 
+import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import org.springframework.data.domain.Page;
@@ -26,5 +27,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query("select g from Group g inner join g.studentAssessment studentAssessment where studentAssessment.user.id = ?1")
     List<Group> findByStudentAssessment_User_Id(Long id);
 
+    @Query("select sa.group FROM StudentAssessment sa WHERE sa.assessment.id=:assessmentId AND sa.user.id=:userId ")
+    List<Group> findByAssessmentIdAndUserId(Long assessmentId, Long userId);
+
+    @Query("select sa.user.id as id, sa.user.name FROM StudentAssessment sa WHERE sa.group.id = :groupId ")
+    List<GroupMemberTuple> findMember(Long groupId);
 
 }

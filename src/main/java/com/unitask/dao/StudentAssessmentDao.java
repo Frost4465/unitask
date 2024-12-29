@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentAssessmentDao {
@@ -50,7 +51,7 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.findByAssessment_Id(id);
     }
 
-    public StudentAssessment findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
+    public Optional<StudentAssessment> findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdAndAssessment_Id(appUserId, assessmentId);
     }
 

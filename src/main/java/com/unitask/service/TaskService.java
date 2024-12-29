@@ -13,10 +13,12 @@ public interface TaskService {
 
     void checkTask(Long id);
 
+    void uncheckTask(Long id);
+
     TaskResponse getTask(Long id);
 
-    List<TaskResponse> getTaskList();
+    List<TaskResponse> getTaskList(Boolean checked);
 
-    List<TaskResponse> getGroupTask();
+    List<TaskResponse> getGroupTask(Boolean checked);
 
 }

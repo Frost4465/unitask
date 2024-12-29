@@ -3,6 +3,7 @@ package com.unitask.service.impl;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.StudentAssessmentDao;
+import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupResponse;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,9 +45,11 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
         if (group == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
         }
-        StudentAssessment studentAssessment = studentAssessmentDao.findByAssessmentAndAppUser(group.getAssessment().getId(), appUser.getId());
-        studentAssessment.setGroup(group);
-        studentAssessmentDao.save(studentAssessment);
+        Optional<StudentAssessment> studentAssessment = studentAssessmentDao.findByAssessmentAndAppUser(group.getAssessment().getId(), appUser.getId());
+        if (studentAssessment.isPresent()) {
+            studentAssessment.get().setGroup(group);
+            studentAssessmentDao.save(studentAssessment.get());
+        }
     }
 
     @Override
@@ -88,5 +94,15 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
         }
         return GroupMapper.INSTANCE.toResponse(group);
+    }
+
+    @Override
+    public List<GroupMemberTuple> getGroupList(Long assessmentId) {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        List<Group> group = groupDao.findByAssessmentIdAndUserId(assessmentId, appUser.getId());
+        if (!group.isEmpty()) {
+            return groupDao.findMember(group.get(0).getId());
+        }
+        return new ArrayList<>();
     }
 }

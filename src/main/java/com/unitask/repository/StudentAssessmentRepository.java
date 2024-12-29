@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentAssessmentRepository extends JpaRepository<StudentAssessment, Long> {
@@ -32,7 +33,7 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
     Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);
 
     @Query("select s from StudentAssessment s where s.user.id = ?1 and s.assessment.id = ?2")
-    StudentAssessment findByUser_IdAndAssessment_Id(Long id, Long id1);
+    Optional<StudentAssessment> findByUser_IdAndAssessment_Id(Long id, Long id1);
 
     @Query("select s from StudentAssessment s where s.user.id in ?1 and s.assessment.id = ?2")
     List<StudentAssessment> findByUser_IdInAndAssessment_Id(Collection<Long> ids, Long id);

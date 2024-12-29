@@ -1,13 +1,9 @@
 package com.unitask.dao;
 
-import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.dto.assessment.AssessmentSubmissionTuple;
-import com.unitask.dto.assessment.AssessmentTuple;
+import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.repository.GroupRepository;
-import com.unitask.util.PageUtil;
-import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +35,16 @@ public class GroupDao {
         return groupRepository.findByName(search, pageable);
     }
 
-    public List<Group> findByUserId(Long id){
+    public List<Group> findByUserId(Long id) {
         return groupRepository.findByStudentAssessment_User_Id(id);
+    }
+
+    public List<Group> findByAssessmentIdAndUserId(Long assessmentId, Long userId) {
+        return groupRepository.findByAssessmentIdAndUserId(assessmentId, userId);
+    }
+
+    public List<GroupMemberTuple> findMember(Long groupId) {
+        return groupRepository.findMember(groupId);
     }
 
 }
