@@ -31,8 +31,12 @@ public class GroupDao {
         return groupRepository.findById(id).orElse(null);
     }
 
-    public Page<GroupTuple> getList(String search, Pageable pageable) {
-        return groupRepository.findByName(search, pageable);
+    public Page<GroupTuple> getList(String search, Pageable pageable, Long subjectOwner) {
+        return groupRepository.findLecturerGroup(search, pageable, subjectOwner);
+    }
+
+    public Page<GroupTuple> findMyGroup(String search, Pageable pageable, Long userId) {
+        return groupRepository.findMyGroup(search, pageable, userId);
     }
 
     public List<Group> findByUserId(Long id) {

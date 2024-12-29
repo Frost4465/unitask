@@ -31,12 +31,8 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.saveAll(studentAssessmentList);
     }
 
-    public Page<AssessmentTuple> getAssessmentListing(String search, Pageable pageable) {
-        String filter = search;
-        if (StringUtils.isNotBlank(search)) {
-            filter = PageUtil.likeSearch(search);
-        }
-        return studentAssessmentRepository.findByAssessment_NameOrderByStatusDesc(filter, pageable);
+    public Page<AssessmentTuple> getAssessmentListing(String search, Pageable pageable, Long userId) {
+        return studentAssessmentRepository.findByAssessment_NameOrderByStatusDesc(search, pageable,userId);
     }
 
     public StudentAssessment findById(Long id) {

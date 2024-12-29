@@ -1,6 +1,7 @@
 package com.unitask.controller;
 
 import com.amazonaws.Response;
+import com.unitask.dto.PageRequest;
 import com.unitask.service.StudentGroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +46,10 @@ public class StudentGroupController {
     public ResponseEntity<?> getGroupMember(@PathVariable Long assessmentId) {
         return ResponseEntity.ok().body(studentGroupService.getGroupList(assessmentId));
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> list(PageRequest pageRequest) {
+        return ResponseEntity.ok().body(studentGroupService.getList(pageRequest));
+    }
+
 }

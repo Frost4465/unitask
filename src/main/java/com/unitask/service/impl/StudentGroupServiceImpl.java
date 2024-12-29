@@ -3,8 +3,10 @@ package com.unitask.service.impl;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.StudentAssessmentDao;
+import com.unitask.dto.PageRequest;
 import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupResponse;
+import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
@@ -13,9 +15,12 @@ import com.unitask.mapper.GroupMapper;
 import com.unitask.service.ContextService;
 import com.unitask.service.StudentGroupService;
 import com.unitask.util.OssUtil;
+import com.unitask.util.PageUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -104,5 +109,13 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
             return groupDao.findMember(group.get(0).getId());
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public Page<GroupTuple> getList(PageRequest pageRequest) {
+        Pageable pageable = PageUtil.pageable(pageRequest);
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Page<GroupTuple> groupAssessmentTuple = groupDao.findMyGroup(pageRequest.getSearch(), pageable, appUser.getId());
+        return groupAssessmentTuple;
     }
 }

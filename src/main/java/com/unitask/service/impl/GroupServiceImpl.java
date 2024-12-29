@@ -11,6 +11,7 @@ import com.unitask.dto.group.GroupResponse;
 import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
+import com.unitask.entity.User.AppUser;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
@@ -109,7 +110,8 @@ public class GroupServiceImpl extends ContextService implements GroupService {
     @Override
     public Page<GroupTuple> getList(PageRequest pageRequest) {
         Pageable pageable = PageUtil.pageable(pageRequest);
-        Page<GroupTuple> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable);
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Page<GroupTuple> groupAssessmentTuple = groupDao.getList(pageRequest.getSearch(), pageable, appUser.getId());
         return groupAssessmentTuple;
     }
 

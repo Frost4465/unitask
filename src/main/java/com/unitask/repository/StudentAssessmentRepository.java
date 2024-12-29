@@ -16,18 +16,18 @@ import java.util.Optional;
 @Repository
 public interface StudentAssessmentRepository extends JpaRepository<StudentAssessment, Long> {
 
-
-    @Query("select s.id as id," +
+    @Query("select a.id as id," +
             "a.name as name," +
             "a.dueDate as dueDate," +
-            "s.status as status," +
-            "sub.name as subjectName" +
-            " from StudentAssessment s " +
-            "left join Assessment a ON s.assessment.id = a.id " +
-            "left join Subject sub ON a.subject.id = sub.id " +
-            "where (?1 is null or a.name like ?1) " +
-            "order by s.status DESC")
-    Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String name, Pageable pageable);
+            "a.subject.name as subjectName," +
+            "a.subject.color as color " +
+            "from StudentAssessment s " +
+            "left join s.assessment a   " +
+            "left join a.subject sub  " +
+            "where (:search is null or a.name like %:search%) " +
+            "AND s.user.id = :userId " +
+            "ORDER by s.status DESC")
+    Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String search, Pageable pageable, Long userId);
 
     @Query("select s from StudentAssessment s where s.user.id = ?1 and s.assessment.id = ?2")
     Optional<StudentAssessment> findByUser_IdAndAssessment_Id(Long id, Long id1);
