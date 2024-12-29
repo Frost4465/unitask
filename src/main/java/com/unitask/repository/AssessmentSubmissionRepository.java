@@ -41,8 +41,8 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
             "WHERE a.group_id IN (:groupId)\n" +
             "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
             "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
-            "  AND (:beforeDate < a.submission_date)\n" +
-            "  AND (:afterDate > a.submission_date)\n" +
+            "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
+            "  AND (:afterDate is null or :afterDate > a.submission_date)\n" +
             "UNION\n" +
             "SELECT DISTINCT a.*\n" +
             "FROM assessment_submission a\n" +
