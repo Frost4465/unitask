@@ -14,5 +14,8 @@ public class DocumentResponse {
     private String assessmentName;
     private String subjectName;
     private LocalDateTime submissionDate;
+    private String uuid;
+    private String path;
+    private String fileName;
 
 }

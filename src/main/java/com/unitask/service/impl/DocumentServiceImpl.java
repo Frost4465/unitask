@@ -48,6 +48,9 @@ public class DocumentServiceImpl extends ContextService implements DocumentServi
                     documentResponse.setAssessmentName(ass.getAssessment().getName());
                     documentResponse.setSubjectName(ass.getAssessment().getSubject().getName());
                     documentResponse.setSubmissionDate(ass.getSubmissionDate());
+                    documentResponse.setPath(ass.getPath());
+                    documentResponse.setUuid(ass.getUuid());
+                    documentResponse.setFileName(ass.getName());
                     return documentResponse;
                 }).toList());
     }
