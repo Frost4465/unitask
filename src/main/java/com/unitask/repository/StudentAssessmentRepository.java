@@ -4,10 +4,12 @@ import com.unitask.constant.Enum.GeneralStatus;
 import com.unitask.dto.assessment.AssessmentSubmissionTuple;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
+import com.unitask.entity.User.AppUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -38,5 +40,8 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
     @Query("select s from StudentAssessment s where s.assessment.id = ?1")
     List<StudentAssessment> findByAssessment_Id(Long id);
 
+    @Query("SELECT user FROM StudentAssessment user " +
+            "WHERE user.id IN :ids ")
+    List<StudentAssessment> findAllByIds(@Param("ids") Collection<Long> ids);
 
 }
