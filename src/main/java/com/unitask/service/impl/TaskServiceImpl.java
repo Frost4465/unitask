@@ -37,7 +37,7 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     private StudentAssessmentDao studentAssessmentDao;
 
     @Override
-    public void createTask(TaskRequest taskRequest) {
+    public TaskResponse createTask(TaskRequest taskRequest) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Assessment assessment = null;
         if (taskRequest.getAssignmentId() != null) {
@@ -62,6 +62,7 @@ public class TaskServiceImpl extends ContextService implements TaskService {
             task.setUser(appUser);
         }
         taskDao.save(task);
+        return TaskMapper.INSTANCE.entityToResponse(task);
     }
 
     @Override

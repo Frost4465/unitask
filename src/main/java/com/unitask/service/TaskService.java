@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    void createTask(TaskRequest taskRequest);
+    TaskResponse createTask(TaskRequest taskRequest);
 
     void updateTask(Long id, TaskRequest taskRequest);
 

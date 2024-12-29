@@ -15,6 +15,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select t from Task t where t.assessment.id in ?1")
     List<Task> findByAssessment_IdIn(Collection<Long> ids);
 
-    @Query("select t from Task t where t.group.id in :ids AND t.checked = :check")
+    @Query("select t from Task t where t.group.id in :ids AND t.checked = :check ORDER BY t.assessment.id")
     List<Task> findByGroup_IdIn(Collection<Long> ids, Boolean check);
 }
