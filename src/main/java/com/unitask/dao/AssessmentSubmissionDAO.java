@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -31,4 +32,21 @@ public class AssessmentSubmissionDAO {
     public AssessmentSubmission findById(Long id) {
         return assessmentSubmissionRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, "Not found"));
     }
+
+    public AssessmentSubmission save(AssessmentSubmission assessmentSubmission) {
+        return assessmentSubmissionRepository.save(assessmentSubmission);
+    }
+
+    public Page<AssessmentSubmission> getAllAssessmentSubmissionsBaseOnIndividualAndGroup(List<Long> groupId, Long userId, String assessmentName,
+                                                                                          String subjectName, LocalDateTime beforeSubmissionDate, LocalDateTime afterSubmissionDate
+            , Pageable pageable) {
+        String assName = StringUtils.isNotBlank(assessmentName) ? "%" + assessmentName + "%" : null;
+        String subName = StringUtils.isNotBlank(subjectName) ? "%" + subjectName + "%" : null;
+        return assessmentSubmissionRepository.findByGroupIdUnionIndividual(groupId, userId, assName, subName, beforeSubmissionDate, afterSubmissionDate, pageable);
+    }
+
+    public AssessmentSubmission findLatestByAssessment(Long id){
+        return assessmentSubmissionRepository.findByAssessment_Id(id).stream().findFirst().orElse(null);
+    }
+
 }

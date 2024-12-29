@@ -1,6 +1,7 @@
 package com.unitask.entity.assessment;
 
 import com.unitask.entity.Group;
+import com.unitask.entity.OssFile;
 import com.unitask.entity.StudentAssessment;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,11 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "assessment_submission")
 @AllArgsConstructor
-public class AssessmentSubmission {
+public class AssessmentSubmission extends OssFile {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(nullable = false)

@@ -5,9 +5,8 @@ import com.unitask.service.StudentAssessmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Validated
@@ -20,5 +19,16 @@ public class StudentAssessmentController {
     @GetMapping("/assessment/list")
     public ResponseEntity<?> getAssessmentListing(PageRequest pageRequest) {
         return ResponseEntity.ok().body(studentAssessmentService.getAssessmentListing(pageRequest));
+    }
+
+    @PostMapping("/submit/{id}")
+    public ResponseEntity<?> submitAssessment(@PathVariable("id") Long id, @RequestPart MultipartFile multipartFile) {
+        studentAssessmentService.submit(id, multipartFile);
+        return ResponseEntity.ok().body("OK");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAssessment(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(studentAssessmentService.getAssessment(id));
     }
 }

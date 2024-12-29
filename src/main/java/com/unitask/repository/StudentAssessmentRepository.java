@@ -1,10 +1,7 @@
 package com.unitask.repository;
 
-import com.unitask.constant.Enum.GeneralStatus;
-import com.unitask.dto.assessment.AssessmentSubmissionTuple;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
-import com.unitask.entity.User.AppUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
