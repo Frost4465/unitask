@@ -56,5 +56,4 @@ public class StudentAssessmentDao {
     public List<StudentAssessment> findByAssessmentAndAppUserList(List<Long> appUserIdList, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdInAndAssessment_Id(appUserIdList, assessmentId);
     }
-
 }

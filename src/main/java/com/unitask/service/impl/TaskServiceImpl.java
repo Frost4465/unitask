@@ -1,9 +1,6 @@
 package com.unitask.service.impl;
 
-import com.unitask.dao.AppUserDAO;
-import com.unitask.dao.AssessmentDao;
-import com.unitask.dao.GroupDao;
-import com.unitask.dao.TaskDao;
+import com.unitask.dao.*;
 import com.unitask.dto.task.TaskRequest;
 import com.unitask.dto.task.TaskResponse;
 import com.unitask.entity.Group;
@@ -34,13 +31,15 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     private GroupDao groupDao;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private StudentAssessmentDao studentAssessmentDao;
 
     @Override
     public void createTask(TaskRequest taskRequest) {
         Assessment assessment = null;
-        if (taskRequest.getAssigmentId() != null){
+        if (taskRequest.getAssigmentId() != null) {
             assessment = assessmentDao.findById(taskRequest.getAssigmentId());
-            if (assessment == null){
+            if (assessment == null) {
                 throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Assessment does not Exists");
             }
         }
@@ -57,13 +56,13 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     @Override
     public void updateTask(Long id, TaskRequest taskRequest) {
         Task task = taskDao.findById(id);
-        if (task == null){
+        if (task == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Task does not Exists");
         }
         Assessment assessment = null;
-        if (taskRequest.getAssigmentId() != null){
+        if (taskRequest.getAssigmentId() != null) {
             assessment = assessmentDao.findById(taskRequest.getAssigmentId());
-            if (assessment == null){
+            if (assessment == null) {
                 throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Assessment does not Exists");
             }
         }
@@ -76,7 +75,7 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     @Override
     public void checkTask(Long id) {
         Task task = taskDao.findById(id);
-        if (task == null){
+        if (task == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Task does not Exists");
         }
         task.setChecked(Boolean.TRUE);
@@ -86,7 +85,7 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     @Override
     public TaskResponse getTask(Long id) {
         Task task = taskDao.findById(id);
-        if (task == null){
+        if (task == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Task does not Exists");
         }
         return TaskMapper.INSTANCE.entityToResponse(task);
@@ -103,8 +102,9 @@ public class TaskServiceImpl extends ContextService implements TaskService {
     public List<TaskResponse> getGroupTask() {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         List<Group> groupList = groupDao.findByUserId(appUser.getId());
+        List<Long> groupIdList = groupList.stream().map(Group::getId).toList();
         List<Long> assessments = groupList.stream().map(Group::getAssessment).map(Assessment::getId).distinct().toList();
-        List<Task> taskList = taskDao.findByAssessments(assessments);
+        List<Task> taskList = taskDao.findByAssessmentsAndGroupId(groupIdList, assessments);
         return TaskMapper.INSTANCE.entityListToResponseList(taskList);
     }
 
