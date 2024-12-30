@@ -45,5 +45,7 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
     @Query("select s from StudentAssessment s where s.user.id = ?1 and s.group is null")
     List<StudentAssessment> findByUser_IdAndGroupNull(Long id);
 
+    @Query("select s from StudentAssessment s where s.assessment.subject.id = ?1")
+    List<StudentAssessment> findByAssessment_Subject_Id(Long id);
 
 }

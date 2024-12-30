@@ -4,6 +4,7 @@ package com.unitask.controller;
 import com.unitask.dto.PageRequest;
 import com.unitask.dto.annoucement.AnnouncementRequest;
 import com.unitask.service.AnnouncementService;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +19,7 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody AnnouncementRequest announcementRequest) {
+    public ResponseEntity<?> create(@RequestBody AnnouncementRequest announcementRequest) throws MessagingException {
         return ResponseEntity.ok().body(announcementService.create(announcementRequest));
     }
 

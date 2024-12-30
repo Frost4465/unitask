@@ -64,4 +64,8 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.findByUser_IdAndGroupNull(id);
     }
 
+    public List<StudentAssessment> findBySubject(Long id){
+        return studentAssessmentRepository.findByAssessment_Subject_Id(id);
+    }
+
 }
