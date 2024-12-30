@@ -30,19 +30,8 @@ public class Group {
     private Assessment assessment;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<StudentAssessment> studentAssessment;
-
-    @Column(nullable = false)
-    private String fileName;
-
-    @Column(nullable = false)
-    private String filePath;
-
-    @Column(nullable = false, unique = true)
-    private String uuid;
-
-    @Column
-    private LocalDateTime fileCreatedDate;
 
     @Column
     private Boolean openForPublic = false;

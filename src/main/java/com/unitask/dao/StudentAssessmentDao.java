@@ -1,5 +1,6 @@
 package com.unitask.dao;
 
+import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.exception.ServiceAppException;
@@ -45,13 +46,10 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.findByAssessment_Id(id);
     }
 
-    public Optional<StudentAssessment> findByAssessmentAndAppUser(Long appUserId, Long assessmentId) {
+    public Optional<StudentAssessment> findByAppUserAndAssessment(Long appUserId, Long assessmentId) {
         return studentAssessmentRepository.findByUser_IdAndAssessment_Id(appUserId, assessmentId);
     }
 
-    public List<StudentAssessment> findByAssessmentAndAppUserList(List<Long> appUserIdList, Long assessmentId) {
-        return studentAssessmentRepository.findByUser_IdInAndAssessment_Id(appUserIdList, assessmentId);
-    }
 
     public List<StudentAssessment> findByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
@@ -64,8 +62,11 @@ public class StudentAssessmentDao {
         return studentAssessmentRepository.findByUser_IdAndGroupNull(id);
     }
 
-    public List<StudentAssessment> findBySubject(Long id){
+    public List<StudentAssessment> findBySubject(Long id) {
         return studentAssessmentRepository.findByAssessment_Subject_Id(id);
     }
 
+    public List<AssessmentTuple> findByGroupAssessment(Long appUser) {
+        return studentAssessmentRepository.findByGroupAssessment(AssignmentMode.GROUP, appUser);
+    }
 }

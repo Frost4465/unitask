@@ -42,6 +42,7 @@ public class Assessment {
     private GeneralStatus generalStatus;
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
+    @ToString.Exclude
     List<StudentAssessment> studentAssessments;
 
     @Column
@@ -55,12 +56,14 @@ public class Assessment {
     private String lecturerInstruction;
 
     @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<AssessmentMarkingRubric> assessmentMarkingRubrics = new HashSet<>();
 
     @OneToMany(mappedBy = "assessment", orphanRemoval = true)
+    @ToString.Exclude
     private Set<AssessmentFile> attachedFile;
 
     private LocalDate startDate;
 
-    private Long maxMember;
+    private Long maxMember = 1L;
 }

@@ -1,5 +1,6 @@
 package com.unitask.repository;
 
+import com.unitask.constant.Enum.AssignmentMode;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
             "ORDER by s.status DESC")
     Page<AssessmentTuple> findByAssessment_NameOrderByStatusDesc(String search, Pageable pageable, Long userId);
 
-    @Query("select s from StudentAssessment s where s.user.id = ?1 and s.assessment.id = ?2")
-    Optional<StudentAssessment> findByUser_IdAndAssessment_Id(Long id, Long id1);
+    @Query("select s from StudentAssessment s where s.user.id = :userId and s.assessment.id = :assessmentId")
+    Optional<StudentAssessment> findByUser_IdAndAssessment_Id(Long userId, Long assessmentId);
 
     @Query("select s from StudentAssessment s where s.user.id in ?1 and s.assessment.id = ?2")
     List<StudentAssessment> findByUser_IdInAndAssessment_Id(Collection<Long> ids, Long id);
@@ -48,4 +49,18 @@ public interface StudentAssessmentRepository extends JpaRepository<StudentAssess
     @Query("select s from StudentAssessment s where s.assessment.subject.id = ?1")
     List<StudentAssessment> findByAssessment_Subject_Id(Long id);
 
+    @Query("select a.id as id," +
+            "a.name as name," +
+            "a.dueDate as dueDate," +
+            "a.maxMember as maxNumber," +
+            "a.subject.name as subjectCode," +
+            "a.subject.name as subjectName," +
+            "a.subject.color as color " +
+            "from StudentAssessment s " +
+            "left join s.assessment a   " +
+            "left join a.subject sub  " +
+            "where a.assignmentMode = :assignmentMode " +
+            "AND s.user.id = :userId " +
+            "ORDER by s.status DESC")
+    List<AssessmentTuple> findByGroupAssessment(AssignmentMode assignmentMode, Long userId);
 }

@@ -18,9 +18,6 @@ public class GroupResponse {
     private String description;
     private AssessmentResponse assessment;
     private List<GroupMemberListDto> groupMembers;
-    private String fileName;
-    private String filePath;
-    private LocalDateTime fileCreatedDate;
     private Boolean locked;
     private Boolean openForPublic;
 }

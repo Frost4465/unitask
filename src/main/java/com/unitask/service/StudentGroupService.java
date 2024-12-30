@@ -1,7 +1,7 @@
 package com.unitask.service;
 
-import com.unitask.dto.GroupMemberListDto;
 import com.unitask.dto.PageRequest;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupResponse;
 import com.unitask.dto.group.GroupTuple;
@@ -14,7 +14,7 @@ public interface StudentGroupService {
 
     void joinGroup(Long id);
 
-    void submitGroup(Long id, MultipartFile multipartFile);
+//    void submitGroup(Long id, MultipartFile multipartFile);
 
     void leaveGroup(Long id);
 
@@ -24,6 +24,8 @@ public interface StudentGroupService {
 
     Page<GroupTuple> getList(PageRequest pageRequest);
 
-    List<GroupTuple> getGroupList();
+    Page<GroupTuple> getGroupList(PageRequest pageRequest);
+
+    List<AssessmentTuple> getAssessment();
 
 }

@@ -20,7 +20,9 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
     @Query("select a.id as id," +
             "a.name as name," +
             "a.dueDate as dueDate," +
+            "a.maxMember as maxNumber," +
             "a.subject.name as subjectName," +
+            "a.subject.code as subjectCode," +
             "a.subject.color as color " +
             "from Assessment a " +
             "where (a.subject.owner.email = :email) " +

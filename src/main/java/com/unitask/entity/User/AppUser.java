@@ -22,7 +22,7 @@ public class AppUser {
     private String email;
     @Column
     private String name;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

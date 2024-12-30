@@ -25,10 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,12 +50,9 @@ public class GroupServiceImpl extends ContextService implements GroupService {
         group.setAssessment(assessment);
         Group savedGroup = groupDao.save(group);
 
-        List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAssessmentAndAppUserList(groupRequest.getMembers(), assessment.getId());
+        List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByIds(groupRequest.getMembers());
         if (!CollectionUtils.isEmpty(studentAssessmentList)) {
-            studentAssessmentDao.saveAll(studentAssessmentList.stream().map(studentAss -> {
-                studentAss.setGroup(savedGroup);
-                return studentAss;
-            }).toList());
+            studentAssessmentDao.saveAll(studentAssessmentList.stream().peek(studentAss -> studentAss.setGroup(savedGroup)).toList());
         }
     }
 
@@ -82,18 +76,20 @@ public class GroupServiceImpl extends ContextService implements GroupService {
         Map<Long, StudentAssessment> existingValue = studentAssessmentSet.stream().collect(Collectors.toMap(StudentAssessment::getId, x -> x));
 
         List<StudentAssessment> studentAssessmentList = new ArrayList<>();
-        groupRequest.getMembers().forEach(memberId -> {
-            StudentAssessment studentAssessment;
-            if (existingValue.containsKey(memberId)) {
-                //old member
-                existingValue.remove(memberId);
-            } else {
-                //new member
-                studentAssessment = request.get(memberId);
-                studentAssessment.setGroup(group);
-                studentAssessmentList.add(studentAssessment);
-            }
-        });
+        groupRequest.getMembers().stream()
+                .filter(Objects::nonNull)
+                .forEach(memberId -> {
+                    StudentAssessment studentAssessment;
+                    if (existingValue.containsKey(memberId)) {
+                        //old member
+                        existingValue.remove(memberId);
+                    } else {
+                        //new member
+                        studentAssessment = request.get(memberId);
+                        studentAssessment.setGroup(group);
+                        studentAssessmentList.add(studentAssessment);
+                    }
+                });
         studentAssessmentList.addAll(existingValue.values().stream().peek(studentAss -> studentAss.setGroup(null)).toList());
         studentAssessmentDao.saveAll(studentAssessmentList);
     }
@@ -130,7 +126,7 @@ public class GroupServiceImpl extends ContextService implements GroupService {
         Assessment ass = assessmentDao.findById(id);
         List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAssignment(ass.getId());
         if (CollectionUtils.isEmpty(studentAssessmentList)) {
-            return null;
+            return new ArrayList<>();
         }
         return studentAssessmentList.stream().map(studentAss -> {
             DropdownResponse dropdownResponse = new DropdownResponse();

@@ -14,6 +14,10 @@ public interface AssessmentTuple {
 
     String getSubjectName();
 
+    String getSubjectCode();
+
+    Long getMaxNumber();
+
     String getColor();
 
 }

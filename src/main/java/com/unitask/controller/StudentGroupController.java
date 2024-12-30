@@ -25,11 +25,11 @@ public class StudentGroupController {
         return ResponseEntity.ok().body("OK");
     }
 
-    @PostMapping("/submit/{id}")
-    public ResponseEntity<?> submitGroup(@PathVariable("id") Long id, @RequestBody MultipartFile multipartFile) {
-        studentGroupService.submitGroup(id, multipartFile);
-        return ResponseEntity.ok().body("OK");
-    }
+//    @PostMapping("/submit/{id}")
+//    public ResponseEntity<?> submitGroup(@PathVariable("id") Long id, @RequestBody MultipartFile multipartFile) {
+//        studentGroupService.submitGroup(id, multipartFile);
+//        return ResponseEntity.ok().body("OK");
+//    }
 
     @PostMapping("/leave/{id}")
     public ResponseEntity<?> leaveGroup(@PathVariable("id") Long id) {
@@ -52,9 +52,14 @@ public class StudentGroupController {
         return ResponseEntity.ok().body(studentGroupService.getList(pageRequest));
     }
 
-    @GetMapping("/groupListing")
+    @GetMapping("/public")
     public ResponseEntity<?> groupListing(PageRequest pageRequest) {
-        return ResponseEntity.ok().body(studentGroupService.getGroupList());
+        return ResponseEntity.ok().body(studentGroupService.getGroupList(pageRequest));
+    }
+
+    @GetMapping("/assessment/list")
+    public ResponseEntity<?> getAssessments( ) {
+        return ResponseEntity.ok().body(studentGroupService.getAssessment());
     }
 
 }

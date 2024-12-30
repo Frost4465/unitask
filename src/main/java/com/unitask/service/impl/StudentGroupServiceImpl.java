@@ -4,6 +4,7 @@ import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.GroupDao;
 import com.unitask.dao.StudentAssessmentDao;
 import com.unitask.dto.PageRequest;
+import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.dto.group.GroupMemberTuple;
 import com.unitask.dto.group.GroupResponse;
 import com.unitask.dto.group.GroupTuple;
@@ -51,32 +52,32 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
         if (group == null) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
         }
-        Optional<StudentAssessment> studentAssessment = studentAssessmentDao.findByAssessmentAndAppUser(group.getAssessment().getId(), appUser.getId());
+        Optional<StudentAssessment> studentAssessment = studentAssessmentDao.findByAppUserAndAssessment(appUser.getId(), group.getAssessment().getId());
         if (studentAssessment.isPresent()) {
             studentAssessment.get().setGroup(group);
             studentAssessmentDao.save(studentAssessment.get());
         }
     }
 
-    @Override
-    public void submitGroup(Long id, MultipartFile multipartFile) {
-        Group group = groupDao.findById(id);
-        if (group == null) {
-            throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
-        }
-        if (StringUtils.isNotBlank(group.getFilePath())) {
-            ossUtil.removeObject(group.getFilePath());
-        }
-        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
-        String uuid = UUID.randomUUID().toString();
-        String path = "group" + "/" + uuid + "." + extension;
-        ossUtil.putObject(path, multipartFile);
-        group.setFileName(multipartFile.getOriginalFilename());
-        group.setFilePath(path);
-        group.setUuid(uuid);
-        group.setFileCreatedDate(LocalDateTime.now());
-        groupDao.save(group);
-    }
+//    @Override
+//    public void submitGroup(Long id, MultipartFile multipartFile) {
+//        Group group = groupDao.findById(id);
+//        if (group == null) {
+//            throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Group does not Exists");
+//        }
+//        if (StringUtils.isNotBlank(group.getFilePath())) {
+//            ossUtil.removeObject(group.getFilePath());
+//        }
+//        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+//        String uuid = UUID.randomUUID().toString();
+//        String path = "group" + "/" + uuid + "." + extension;
+//        ossUtil.putObject(path, multipartFile);
+//        group.setFileName(multipartFile.getOriginalFilename());
+//        group.setFilePath(path);
+//        group.setUuid(uuid);
+//        group.setFileCreatedDate(LocalDateTime.now());
+//        groupDao.save(group);
+//    }
 
     @Override
     public void leaveGroup(Long id) {
@@ -121,10 +122,17 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
     }
 
     @Override
-    public List<GroupTuple> getGroupList() {
+    public Page<GroupTuple> getGroupList(PageRequest pageRequest) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Pageable pageable = PageUtil.pageable(pageRequest);
         List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAppUserAndGroupNull(appUser.getId());
         List<Long> assessmentId = studentAssessmentList.stream().map(StudentAssessment::getAssessment).map(Assessment::getId).distinct().toList();
-        return groupDao.findByAssessmentId(assessmentId);
+        return groupDao.findByAssessmentId(pageable, assessmentId, true);
+    }
+
+    @Override
+    public List<AssessmentTuple> getAssessment() {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        return studentAssessmentDao.findByGroupAssessment(appUser.getId());
     }
 }
