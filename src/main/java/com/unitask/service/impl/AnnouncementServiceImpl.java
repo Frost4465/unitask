@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -42,6 +43,7 @@ public class AnnouncementServiceImpl extends ContextService implements Announcem
 
     @Override
     public AnnouncementResponse create(AnnouncementRequest announcementRequest) throws MessagingException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Subject subject = subjectDAO.findById(announcementRequest.getSubjectId());
         Announcement announcement = AnnouncementMapper.INSTANCE.toEntity(announcementRequest, subject, appUser);
@@ -56,7 +58,7 @@ public class AnnouncementServiceImpl extends ContextService implements Announcem
                     .toList();
             HashMap<String, Object> values = new HashMap<>();
             values.put("title", announcement.getTitle() + " - " + announcement.getDescription());
-            values.put("dateTime", announcement.getPostedDate());
+            values.put("dateTime", formatter.format(announcement.getPostedDate()));
             values.put("subject", subject.getCode() + " " + subject.getName());
             emailUtil.emailBlast("Announcement", studentEmailList, "Announcement", values);
         }
