@@ -37,15 +37,16 @@ public class AssessmentSubmissionDAO {
         return assessmentSubmissionRepository.save(assessmentSubmission);
     }
 
-    public Page<AssessmentSubmission> getAllAssessmentSubmissionsBaseOnIndividualAndGroup(List<Long> groupId, Long userId, String assessmentName,
+    public Page<AssessmentSubmission> getAllAssessmentSubmissionsBaseOnIndividualAndGroup(List<Long> groupId, Long userId, String docName, String assessmentName,
                                                                                           String subjectName, LocalDateTime beforeSubmissionDate, LocalDateTime afterSubmissionDate
             , Pageable pageable) {
+        String documentName = StringUtils.isNotBlank(docName) ? "%" + docName + "%" : null;
         String assName = StringUtils.isNotBlank(assessmentName) ? "%" + assessmentName + "%" : null;
         String subName = StringUtils.isNotBlank(subjectName) ? "%" + subjectName + "%" : null;
-        return assessmentSubmissionRepository.findByGroupIdUnionIndividual(groupId, userId, assName, subName, beforeSubmissionDate, afterSubmissionDate, pageable);
+        return assessmentSubmissionRepository.findByGroupIdUnionIndividual(groupId, userId, documentName, assName, subName, beforeSubmissionDate, afterSubmissionDate, pageable);
     }
 
-    public AssessmentSubmission findLatestByAssessment(Long id){
+    public AssessmentSubmission findLatestByAssessment(Long id) {
         return assessmentSubmissionRepository.findByAssessment_Id(id).stream().findFirst().orElse(null);
     }
 

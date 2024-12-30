@@ -39,6 +39,7 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
             "INNER JOIN assessment ass ON a.assessment_id = ass.id\n" +
             "INNER JOIN subject s ON s.id = ass.subject_id\n" +
             "WHERE a.group_id IN (:groupId)\n" +
+            "  AND (:docName IS NULL OR a.name LIKE :docName)\n" +
             "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
             "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
             "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
@@ -51,11 +52,13 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
             "INNER JOIN subject s ON s.id = ass.subject_id\n" +
             "WHERE asa.user_id = :userId\n" +
             "  AND a.group_id IS NULL\n" +
+            "  AND (:docName IS NULL OR a.name LIKE :docName)\n" +
             "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
             "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
             "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
             "  AND (:afterDate is null or :afterDate > a.submission_date);", nativeQuery = true)
     Page<AssessmentSubmission> findByGroupIdUnionIndividual(@Param("groupId") List<Long> groupId, @Param("userId") Long userId,
+                                                            @Param("docName") String docName,
                                                             @Param("assName") String assName, @Param("subName") String subName,
                                                             @Param("beforeDate") LocalDateTime beforeDate, @Param("afterDate") LocalDateTime afterDate, Pageable pageable);
 
