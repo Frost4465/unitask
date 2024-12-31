@@ -52,7 +52,7 @@ public class Assessment {
     @Column
     private LocalDate dueDate;
 
-    @Column(columnDefinition = "longText")
+    @Column(columnDefinition = "TEXT")
     private String lecturerInstruction;
 
     @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
