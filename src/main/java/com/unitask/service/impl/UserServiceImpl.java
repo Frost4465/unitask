@@ -43,10 +43,10 @@ public class UserServiceImpl extends ContextService implements UserService {
 
     private static final int OTP_EXPIRATION_MINUTES = 5;
 
-    private Cache<String, String> otpCache = CacheBuilder.newBuilder() .expireAfterWrite(OTP_EXPIRATION_MINUTES, TimeUnit.MINUTES) .build();
+    private Cache<String, String> otpCache = CacheBuilder.newBuilder().expireAfterWrite(OTP_EXPIRATION_MINUTES, TimeUnit.MINUTES).build();
 
     @Override
-    public void addUser(String username, String password, String name, UserRole userRole ) {
+    public void addUser(String username, String password, String name, UserRole userRole) {
         if (appUserDAO.findOptionalByEmail(username).isPresent()) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, UserErrorConstant.EXISTS);
         }
@@ -75,7 +75,7 @@ public class UserServiceImpl extends ContextService implements UserService {
     @Override
     public void resetPassword(ResetPasswordRequest request) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
-        if (appUser.getPassword().equals(passwordEncoder.encode(request.getOldPassword()))) {
+        if (passwordEncoder.matches(request.getOldPassword(), appUser.getPassword())) {
             appUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
             appUserDAO.save(appUser);
         } else {

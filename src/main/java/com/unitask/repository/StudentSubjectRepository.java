@@ -20,14 +20,12 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubject, 
             "s.color as color," +
             "ss.status as status " +
             "FROM Subject s " +
-            "LEFT JOIN StudentSubject ss ON ss.subject.Id = s.Id " +
-            "LEFT JOIN ss.user ssu " +
-            "WHERE (ss IS NULL OR ssu.email = :email) " +
-            "AND (:search IS NULL OR s.name LIKE %:search%)" +
+            "LEFT JOIN StudentSubject ss ON (ss.subject.id = s.id AND ss.user.email =:email)" +
+            "WHERE (:search IS NULL OR s.name LIKE %:search%)" +
             "ORDER BY ss.status DESC "
     )
     Page<StudentSubjectTuple> findByStudentEmail(Pageable pageable, String email, String search);
 
-    @Query("select s from StudentSubject s where s.user.email = ?1 and s.subject.Id = ?2")
+    @Query("select s from StudentSubject s where s.user.email = ?1 and s.subject.id = ?2")
     Optional<StudentSubject> findByUser_EmailAndSubject_Id(String email, Long Id);
 }
