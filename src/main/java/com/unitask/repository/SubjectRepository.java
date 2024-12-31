@@ -36,7 +36,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             "left join Assessment ass on s.id = ass.subject.id " +
             "left join AssessmentFile assFile on ass.id = assFile.assessment.id " +
             "left join AssessmentSubmission assSubmit on assSubmit.assessment.id = ass.id " +
-            "where (:docName is null or ass.name like :docName) " +
+            "where (:docName is null or assFile.name like :docName) " +
             "and (:assName is null or ass.name like :assName) " +
             "and (:subName is null or s.name like :subName) " +
             "and user.id = :id " +
