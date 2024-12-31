@@ -14,8 +14,8 @@ import java.util.List;
 public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
 
 
-    @Query("select a from Assessment a where a.subject.id = ?1")
-    List<Assessment> findBySubject_Id(Long Id);
+    @Query("select a from Assessment a where a.subject.id in ?1")
+    List<Assessment> findBySubject_Id_List(List<Long> Id);
 
     @Query("select a.id as id," +
             "a.name as name," +
@@ -28,6 +28,7 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
             "where (a.subject.owner.email = :email) " +
             "AND (a.name LIKE %:search%) " +
             "ORDER BY a.subject.id DESC")
-    Page<AssessmentTuple> findBySubject_Owner_EmailAndNameLike(Pageable pageable, String email, String search );
+    Page<AssessmentTuple> findBySubject_Owner_EmailAndNameLike(Pageable pageable, String email, String search);
+
 
 }

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
@@ -22,5 +24,9 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             "AND (:email IS NULL OR s.owner.email = :email) " +
             "AND (:subjectId IS NULL OR s.id = :subjectId) ")
     Page<SubjectTuple> findListing(Pageable pageable, String email, String search, Long subjectId);
+
+    @Query("select s from Subject s where s.owner.id = ?1")
+    List<Subject> findByOwner_Id(Long id);
+
 
 }

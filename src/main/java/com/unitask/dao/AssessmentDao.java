@@ -67,4 +67,11 @@ public class AssessmentDao {
         return assessmentFileRepository.findById(id).orElseThrow(() -> new ServiceAppException(HttpStatus.BAD_REQUEST, "NOT_FOUND"));
     }
 
+    public List<Assessment> findBySubjectList(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return null;
+        }
+        return assessmentRepository.findBySubject_Id_List(ids);
+    }
+
 }

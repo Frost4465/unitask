@@ -1,12 +1,12 @@
 package com.unitask.service.impl;
 
-import com.unitask.dao.AppUserDAO;
-import com.unitask.dao.AssessmentSubmissionDAO;
-import com.unitask.dao.GroupDao;
+import com.unitask.constant.Enum.UserRole;
+import com.unitask.dao.*;
 import com.unitask.dto.DocumentPageRequest;
 import com.unitask.dto.DocumentResponse;
 import com.unitask.dto.PageRequest;
 import com.unitask.entity.Group;
+import com.unitask.entity.Subject;
 import com.unitask.entity.User.AppUser;
 import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.assessment.AssessmentSubmission;
@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +44,10 @@ public class DocumentServiceImpl extends ContextService implements DocumentServi
     private GroupDao groupDao;
     @Autowired
     private OssUtil ossUtil;
+    @Autowired
+    private SubjectDAO subjectDAO;
+    @Autowired
+    private AssessmentDao assessmentDao;
 
 
     public Map<Assessment, Optional<AssessmentSubmission>> getLatestSubmissionsByAssessment(List<AssessmentSubmission> submissions) {
@@ -56,6 +61,26 @@ public class DocumentServiceImpl extends ContextService implements DocumentServi
         PageRequest pageRequest = new PageRequest(documentPageRequest.getPage(), documentPageRequest.getPageSize(), documentPageRequest.getSearch(), documentPageRequest.getSort());
         Pageable pageable = PageUtil.pageable(pageRequest);
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        if (appUser.getUserRole().equals(UserRole.LECTURER)){
+            List<Subject> subjectList = subjectDAO.findByOwnerId(appUser.getId());
+            if (CollectionUtils.isEmpty(subjectList)){
+                return null;
+            }
+            List<Long> subjectIds = subjectList.stream().map(Subject::getId).toList();
+            List<Assessment> assessmentList = assessmentDao.findBySubjectList(subjectIds);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
         List<Long> groupList = groupDao.findByUserId(appUser.getId()).stream().map(Group::getId).toList();
         Page<AssessmentSubmission> assessmentSubmissionListing = assessmentSubmissionDAO.
                 getAllAssessmentSubmissionsBaseOnIndividualAndGroup(groupList, appUser.getId(), documentPageRequest.getSearch(), documentPageRequest.getAssessmentName(),

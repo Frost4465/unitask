@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubjectDAO {
 
@@ -38,4 +40,9 @@ public class SubjectDAO {
     public Page<SubjectTuple> findListing(Pageable pageable, String email, String search, Long subjectId) {
         return subjectRepository.findListing(pageable, email, search,subjectId);
     }
+
+    public List<Subject> findByOwnerId(Long id){
+        return subjectRepository.findByOwner_Id(id);
+    }
+
 }
