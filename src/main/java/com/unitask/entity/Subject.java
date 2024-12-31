@@ -29,9 +29,9 @@ public class Subject {
     private String course;
     @Column(name = "creditHour")
     private Integer creditHour;
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "longText")
     private String description;
-    @Column(name = "learningOutcome")
+    @Column(name = "learningOutcome", columnDefinition = "longText")
     private String learningOutcome;
     @Column(name = "lecturerName")
     private String lecturerName;
