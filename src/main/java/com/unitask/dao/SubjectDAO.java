@@ -1,17 +1,17 @@
 package com.unitask.dao;
 
 import com.unitask.constant.error.SubjectErrorConstant;
+import com.unitask.dto.document.DocumentListingTuple;
 import com.unitask.dto.subject.SubjectTuple;
 import com.unitask.entity.Subject;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.SubjectRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SubjectDAO {
@@ -38,11 +38,15 @@ public class SubjectDAO {
     }
 
     public Page<SubjectTuple> findListing(Pageable pageable, String email, String search, Long subjectId) {
-        return subjectRepository.findListing(pageable, email, search,subjectId);
+        return subjectRepository.findListing(pageable, email, search, subjectId);
     }
 
-    public List<Subject> findByOwnerId(Long id){
-        return subjectRepository.findByOwner_Id(id);
+    public Page<DocumentListingTuple> documentListingLecturer(String docName, String assessmentName, String subjectName, Long id,Pageable pageable) {
+        String documentName = StringUtils.isNotBlank(docName) ? "%" + docName + "%" : null;
+        String assName = StringUtils.isNotBlank(assessmentName) ? "%" + assessmentName + "%" : null;
+        String subName = StringUtils.isNotBlank(subjectName) ? "%" + subjectName + "%" : null;
+
+        return subjectRepository.documentListingLecturer(documentName, assName, subName, id, pageable);
     }
 
 }

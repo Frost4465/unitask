@@ -1,6 +1,7 @@
 package com.unitask.repository;
 
 import com.unitask.dto.assessment.AssessmentSubmissionTuple;
+import com.unitask.dto.document.DocumentListingTuple;
 import com.unitask.entity.assessment.AssessmentSubmission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,40 +35,46 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
             "order by asub.submissionDate DESC")
     Page<AssessmentSubmissionTuple> getAssessmentSubmissionListing(Long ownerId, String assignment, String group, String subject, LocalDateTime beforeDate, LocalDateTime afterDate, Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT a.*\n" +
-            "FROM assessment_submission a\n" +
-            "INNER JOIN student_assessment asa ON a.assessment_id = asa.assessment_id\n" +
-            "INNER JOIN assessment ass ON a.assessment_id = ass.id\n" +
-            "INNER JOIN subject s ON s.id = ass.subject_id\n" +
-            "WHERE a.group_id IN (:groupId)\n" +
-            "  AND (:docName IS NULL OR a.name LIKE :docName)\n" +
-            "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
-            "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
-            "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
-            "  AND (:afterDate is null or :afterDate > a.submission_date)\n" +
-            "UNION\n" +
-            "SELECT DISTINCT a.*\n" +
-            "FROM assessment_submission a\n" +
-            "INNER JOIN student_assessment asa ON a.assessment_id = asa.assessment_id\n" +
-            "INNER JOIN assessment ass ON a.assessment_id = ass.id\n" +
-            "INNER JOIN subject s ON s.id = ass.subject_id\n" +
-            "WHERE asa.user_id = :userId\n" +
-            "  AND a.group_id IS NULL\n" +
-            "  AND (:docName IS NULL OR a.name LIKE :docName)\n" +
-            "  AND (:assName IS NULL OR ass.name LIKE :assName)\n" +
-            "  AND (:subName IS NULL OR s.name LIKE :subName)\n" +
-            "  AND (:beforeDate is null or :beforeDate < a.submission_date)\n" +
-            "  AND (:afterDate is null or :afterDate > a.submission_date);", nativeQuery = true)
-    Page<AssessmentSubmission> findByGroupIdUnionIndividual(@Param("groupId") List<Long> groupId, @Param("userId") Long userId,
-                                                            @Param("docName") String docName,
-                                                            @Param("assName") String assName, @Param("subName") String subName,
-                                                            @Param("beforeDate") LocalDateTime beforeDate, @Param("afterDate") LocalDateTime afterDate, Pageable pageable);
+    @Query("select distinct assSubmit.name as name, " +
+            "ass.name as assessmentName, " +
+            "s.name as subjectName," +
+            "assSubmit.path as path " +
+            "from AssessmentSubmission assSubmit " +
+            "left join Assessment ass on ass.id = assSubmit.assessment.id " +
+            "left join Subject s ON ass.subject.id = s.id " +
+            "left join StudentAssessment studentAss on studentAss.id = assSubmit.studentAssessment.id " +
+            "left join AppUser userId on userId.id = studentAss.user.id " +
+            "where userId.id = :id " +
+            "and assSubmit.group is NULL " +
+            "and (:docName is null or assSubmit.name like :docName) " +
+            "and (:assName is null or ass.name like :assName) " +
+            "and (:subName is null or s.name like :subName) " +
+            "union " +
+            "select distinct assSubmit.name as name, " +
+            "ass.name as assessmentName, " +
+            "s.name as subjectName," +
+            "assSubmit.path as path " +
+            "from AssessmentSubmission assSubmit " +
+            "left join Assessment ass on ass.id = assSubmit.assessment.id " +
+            "left join Subject s ON ass.subject.id = s.id " +
+            "left join Group g on assSubmit.group.id = g.id " +
+            "left join StudentAssessment studentAss on studentAss.assessment.id = g.assessment.id " +
+            "left join AppUser userId on userId.id = studentAss.user.id " +
+            "where userId.id = :id " +
+            "and assSubmit.group IS NOT NULL " +
+            "and (:docName is null or assSubmit.name like :docName) " +
+            "and (:assName is null or ass.name like :assName) " +
+            "and (:subName is null or s.name like :subName) ")
+    Page<DocumentListingTuple> documentListingStudent(@Param("docName") String docName, @Param("assName") String assName,
+                                                      @Param("subName") String subName, @Param("id")Long id, Pageable pageable);
+
 
     @Query("select a from AssessmentSubmission a where a.assessment.id = ?1 ORDER BY a.submissionDate DESC")
     List<AssessmentSubmission> findByAssessment_Id(Long id);
 
     @Query("select a from AssessmentSubmission a where a.group.id = ?1")
     Optional<AssessmentSubmission> findByGroup_Id(Long id);
+
     @Query("select a from AssessmentSubmission a where a.studentAssessment.id = ?1")
     Optional<AssessmentSubmission> findByStudentAssessment_Id(Long id);
 }

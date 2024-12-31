@@ -7,6 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface DocumentService {
 
     PageWrapperVO getListing(DocumentPageRequest documentPageRequest);
-    void downloadFile(Long id, HttpServletResponse response);
+    void downloadFile(String path, HttpServletResponse response);
 
 }

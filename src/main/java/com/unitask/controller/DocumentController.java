@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +23,9 @@ public class DocumentController {
         return ResponseEntity.ok().body(documentService.getListing(documentPageRequest));
     }
 
-    @GetMapping("/{id}")
-    public void downloadDocument(@PathVariable("id") Long id, HttpServletResponse response) {
-        documentService.downloadFile(id, response);
+    @GetMapping("/download")
+    public void downloadDocument(String path, HttpServletResponse response) {
+        documentService.downloadFile(path, response);
     }
 
 

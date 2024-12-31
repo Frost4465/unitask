@@ -1,6 +1,7 @@
 package com.unitask.dao;
 
 import com.unitask.dto.assessment.AssessmentSubmissionTuple;
+import com.unitask.dto.document.DocumentListingTuple;
 import com.unitask.entity.assessment.AssessmentSubmission;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.repository.AssessmentSubmissionRepository;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,13 +38,12 @@ public class AssessmentSubmissionDAO {
         return assessmentSubmissionRepository.save(assessmentSubmission);
     }
 
-    public Page<AssessmentSubmission> getAllAssessmentSubmissionsBaseOnIndividualAndGroup(List<Long> groupId, Long userId, String docName, String assessmentName,
-                                                                                          String subjectName, LocalDateTime beforeSubmissionDate, LocalDateTime afterSubmissionDate
-            , Pageable pageable) {
+    public Page<DocumentListingTuple> getAllAssessmentSubmissionsBaseOnIndividualAndGroup(String docName, String assessmentName,
+                                                                                          String subjectName, Long id,Pageable pageable) {
         String documentName = StringUtils.isNotBlank(docName) ? "%" + docName + "%" : null;
         String assName = StringUtils.isNotBlank(assessmentName) ? "%" + assessmentName + "%" : null;
         String subName = StringUtils.isNotBlank(subjectName) ? "%" + subjectName + "%" : null;
-        return assessmentSubmissionRepository.findByGroupIdUnionIndividual(groupId, userId, documentName, assName, subName, beforeSubmissionDate, afterSubmissionDate, pageable);
+        return assessmentSubmissionRepository.documentListingStudent(documentName, assName, subName, id ,pageable);
     }
 
     public Optional<AssessmentSubmission> findByGroupId(Long id) {
