@@ -70,11 +70,14 @@ public class DocumentServiceImpl extends ContextService implements DocumentServi
         return new PageWrapperVO(assessmentSubmissionListing, assessmentSubmissionListing.getContent().stream().filter(content -> StringUtils.isNotBlank(content.getPath())).toList());
     }
 
-    @Override
-    public void downloadFile(String path, HttpServletResponse response) {
-
+@Override
+public void downloadFile(String path, HttpServletResponse response) {
+    try {
         URL url = ossUtil.getObjectURL(path);
-        ossUtil.getObjectURL(path);
+
+        if (url == null) {
+            throw new IOException("Unable to retrieve URL for the specified path.");
+        }
         String fileName = new File(path).getName();
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -86,7 +89,12 @@ public class DocumentServiceImpl extends ContextService implements DocumentServi
             }
             outputStream.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Error streaming the file content");
+            throw new RuntimeException("Error streaming the file content: " + e.getMessage(), e);
         }
+    } catch (IOException e) {
+        throw new RuntimeException("Failed to download file: " + e.getMessage(), e);
     }
+}
+
+
 }
