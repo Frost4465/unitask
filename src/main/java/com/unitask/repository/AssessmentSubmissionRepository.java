@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AssessmentSubmissionRepository extends JpaRepository<AssessmentSubmission, Long> {
@@ -65,5 +66,8 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
     @Query("select a from AssessmentSubmission a where a.assessment.id = ?1 ORDER BY a.submissionDate DESC")
     List<AssessmentSubmission> findByAssessment_Id(Long id);
 
-
+    @Query("select a from AssessmentSubmission a where a.group.id = ?1")
+    Optional<AssessmentSubmission> findByGroup_Id(Long id);
+    @Query("select a from AssessmentSubmission a where a.studentAssessment.id = ?1")
+    Optional<AssessmentSubmission> findByStudentAssessment_Id(Long id);
 }

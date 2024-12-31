@@ -22,13 +22,13 @@ public class StudentAssessmentController {
     }
 
     @PostMapping("/submit/{id}")
-    public ResponseEntity<?> submitAssessment(@PathVariable("id") Long id, @RequestPart MultipartFile multipartFile) {
+    public ResponseEntity<?> submitAssessment(@PathVariable("id") Long id, @RequestBody MultipartFile multipartFile) {
         studentAssessmentService.submit(id, multipartFile);
         return ResponseEntity.ok().body("OK");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getAssessment(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(studentAssessmentService.getAssessment(id));
+        return ResponseEntity.ok().body(studentAssessmentService.read(id));
     }
 }

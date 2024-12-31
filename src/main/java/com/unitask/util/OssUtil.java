@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,14 @@ public class OssUtil {
         fileDTO.setName(file.getName());
         fileDTO.setUrl(getObjectURL(file.getPath()).toString());
         fileDTO.setCreatedDate(file.getCreatedDate());
+        return fileDTO;
+    }
+
+    public FileResponse toResponse(String path, String name , LocalDateTime createdDate) {
+        FileResponse fileDTO = new FileResponse();
+        fileDTO.setName(name);
+        fileDTO.setUrl(getObjectURL(path).toString());
+        fileDTO.setCreatedDate(createdDate);
         return fileDTO;
     }
 

@@ -1,16 +1,18 @@
 package com.unitask.service.impl;
 
 import com.unitask.dao.AppUserDAO;
+import com.unitask.dao.AssessmentDao;
 import com.unitask.dao.AssessmentSubmissionDAO;
 import com.unitask.dao.StudentAssessmentDao;
-import com.unitask.dto.AssessmentSubmissionResponse;
 import com.unitask.dto.PageRequest;
+import com.unitask.dto.assessment.AssessmentResponse;
 import com.unitask.dto.assessment.AssessmentTuple;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
+import com.unitask.entity.assessment.Assessment;
 import com.unitask.entity.assessment.AssessmentSubmission;
 import com.unitask.exception.ServiceAppException;
-import com.unitask.mapper.StudentAssessmentMapper;
+import com.unitask.mapper.AssessmentMapper;
 import com.unitask.service.ContextService;
 import com.unitask.service.StudentAssessmentService;
 import com.unitask.util.OssUtil;
@@ -18,6 +20,7 @@ import com.unitask.util.PageUtil;
 import com.unitask.util.PageWrapperVO;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,6 +39,7 @@ public class StudentAssessmentServiceImpl extends ContextService implements Stud
 
     @Autowired
     private final StudentAssessmentDao studentAssessmentDao;
+    private final AssessmentDao assessmentDao;
     @Autowired
     private final AppUserDAO appUserDAO;
     @Autowired
@@ -52,10 +57,12 @@ public class StudentAssessmentServiceImpl extends ContextService implements Stud
 
     @Override
     public void submit(Long id, MultipartFile file) {
-        StudentAssessment studentAssessment = studentAssessmentDao.findById(id);
-        if (studentAssessment == null) {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Optional<StudentAssessment> studentAssessmentOptional = studentAssessmentDao.findByAppUserAndAssessment(appUser.getId(), id);
+        if (studentAssessmentOptional.isEmpty()) {
             throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Student Assessment Not Found");
         }
+        StudentAssessment studentAssessment = studentAssessmentOptional.get();
         AssessmentSubmission assessmentSubmission = new AssessmentSubmission();
         assessmentSubmission.setAssessment(studentAssessment.getAssessment());
         assessmentSubmission.setStudentAssessment(studentAssessment);
@@ -77,19 +84,29 @@ public class StudentAssessmentServiceImpl extends ContextService implements Stud
     }
 
     @Override
-    public AssessmentSubmissionResponse getAssessment(Long id) {
-        AssessmentSubmissionResponse assessmentSubmissionResponse = new AssessmentSubmissionResponse();
-        StudentAssessment studentAssessment = studentAssessmentDao.findById(id);
-        if (studentAssessment == null) {
-            throw new ServiceAppException(HttpStatus.BAD_REQUEST, "Student Assessment Not Found");
+    public AssessmentResponse read(Long id) {
+        AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
+        Assessment assessment = assessmentDao.findById(id);
+        AssessmentResponse response = AssessmentMapper.INSTANCE.toResponse(assessment);
+        response.setAttachedFile(ossUtil.toResponse(assessment.getAttachedFile()));
+
+        Optional<StudentAssessment> studentAssessment = studentAssessmentDao.findByAppUserAndAssessment(appUser.getId(), assessment.getId());
+
+        if (studentAssessment.isPresent()) {
+            Optional<AssessmentSubmission> assessmentSubmission;
+            if (studentAssessment.get().getGroup() != null) {
+                assessmentSubmission = assessmentSubmissionDAO.findByGroupId(studentAssessment.get().getGroup().getId());
+            } else {
+                assessmentSubmission = assessmentSubmissionDAO.findByStudentAssessment(studentAssessment.get().getAssessment().getId());
+            }
+
+            if (assessmentSubmission.isPresent() && StringUtils.isNotBlank(assessmentSubmission.get().getPath())) {
+                response.setSubmitted(true);
+                response.setSubmissionFile(ossUtil.toResponse(assessmentSubmission.get().getPath(),
+                        assessmentSubmission.get().getName(), assessmentSubmission.get().getCreatedDate()));
+            }
         }
-        assessmentSubmissionResponse.setStudentAssessmentResponse(StudentAssessmentMapper.INSTANCE.getResponse(studentAssessment));
-        AssessmentSubmission assessmentSubmission = assessmentSubmissionDAO.findLatestByAssessment(studentAssessment.getAssessment().getId());
-        if (assessmentSubmission != null) {
-            assessmentSubmissionResponse.setFilePath(assessmentSubmission.getPath());
-            assessmentSubmissionResponse.setFileName(assessmentSubmission.getName());
-            assessmentSubmissionResponse.setUuid(assessmentSubmission.getUuid());
-        }
-        return assessmentSubmissionResponse;
+
+        return response;
     }
 }

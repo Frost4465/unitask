@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -46,8 +47,15 @@ public class AssessmentSubmissionDAO {
         return assessmentSubmissionRepository.findByGroupIdUnionIndividual(groupId, userId, documentName, assName, subName, beforeSubmissionDate, afterSubmissionDate, pageable);
     }
 
-    public AssessmentSubmission findLatestByAssessment(Long id) {
-        return assessmentSubmissionRepository.findByAssessment_Id(id).stream().findFirst().orElse(null);
+    public Optional<AssessmentSubmission> findByGroupId(Long id) {
+        return assessmentSubmissionRepository.findByGroup_Id(id);
     }
 
+    public Optional<AssessmentSubmission> findByStudentAssessment(Long id) {
+        return assessmentSubmissionRepository.findByStudentAssessment_Id(id);
+    }
+
+    public void delete(AssessmentSubmission assessmentSubmission) {
+        assessmentSubmissionRepository.delete(assessmentSubmission);
+    }
 }

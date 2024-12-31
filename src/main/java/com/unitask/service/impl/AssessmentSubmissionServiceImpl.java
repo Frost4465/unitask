@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @Service
@@ -48,6 +49,8 @@ public class AssessmentSubmissionServiceImpl extends ContextService implements A
         AssessmentSubmission assessmentSubmission = assessmentSubmissionDAO.findById(id);
         AssessmentSubmissionResponse response = AssessmentMapper.INSTANCE.toResponse(assessmentSubmission);
         response.getAssessment().setAttachedFile(ossUtil.toResponse(assessmentSubmission.getAssessment().getAttachedFile()));
+        response.setSubmittedDocuments(Arrays.asList(ossUtil.toResponse(assessmentSubmission.getPath(),
+                assessmentSubmission.getName(), assessmentSubmission.getCreatedDate())));
         return response;
     }
 
@@ -63,6 +66,8 @@ public class AssessmentSubmissionServiceImpl extends ContextService implements A
             studentAssessment.setStatus(GeneralStatus.ACTIVE);
             studentAssessmentDao.save(studentAssessment);
         }
+        ossUtil.removeObject(assessmentSubmission.getPath());
+        assessmentSubmissionDAO.delete(assessmentSubmission);
         return HttpStatus.OK.getReasonPhrase();
     }
 

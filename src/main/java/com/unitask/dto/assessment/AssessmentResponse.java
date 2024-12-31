@@ -22,4 +22,7 @@ public class AssessmentResponse {
     private List<FileResponse> attachedFile;
     private Long maxMember;
     private LocalDate startDate;
+
+    private FileResponse submissionFile;
+    private Boolean submitted;
 }
