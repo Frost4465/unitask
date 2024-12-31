@@ -56,7 +56,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "(SELECT COUNT(sa) FROM g.studentAssessment sa WHERE sa.group.id = g.id ) as memberCount " +
             "from Group g where " +
             "g.assessment.id in :ids " +
-            "AND g.openForPublic = :openForPublic ")
-    Page<GroupTuple> findByAssessment_IdIn(Pageable pageable, Collection<Long> ids, Boolean openForPublic);
+            "AND g.openForPublic = :openForPublic AND g.locked = :locked ")
+    Page<GroupTuple> findByAssessment_IdIn(Pageable pageable, Collection<Long> ids, Boolean openForPublic, Boolean locked);
 
 }

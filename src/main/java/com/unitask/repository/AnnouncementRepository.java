@@ -29,9 +29,12 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
             "a.subject.name as subjectName, " +
             "a.subject.code as subjectCode, " +
             "a.description as description, " +
+            "a.postedDate as postedDate, " +
             "a.subject.color as color " +
             "FROM Announcement a " +
-            "LEFT JOIN StudentSubject ss ON ss.subject.id = a.subject.id " +
-            "WHERE ss IS NOT NULL")
-    Page<AnnouncementTuple> findStudentListing(Pageable pageable);
+            "LEFT JOIN StudentSubject ss ON (ss.subject.id = a.subject.id AND ss.user.id = :ownerId)" +
+            "WHERE ss IS NOT NULL " +
+            "AND (:search IS NULL or a.title LIKE %:search%)"
+    )
+    Page<AnnouncementTuple> findStudentListing(Pageable pageable, Long ownerId, String search);
 }

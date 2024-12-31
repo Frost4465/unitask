@@ -38,4 +38,8 @@ public class AnnouncementDAO {
     public Page<AnnouncementTuple> findListing(Pageable pageable, Long ownerId,String search) {
         return announcementRepository.findListing(pageable, ownerId, search);
     }
+
+    public Page<AnnouncementTuple> findStudentListing(Pageable pageable, Long ownerId,String search) {
+        return announcementRepository.findStudentListing(pageable, ownerId, search);
+    }
 }

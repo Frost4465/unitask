@@ -1,5 +1,6 @@
 package com.unitask.service.impl;
 
+import com.unitask.constant.Enum.UserRole;
 import com.unitask.dao.AnnouncementDAO;
 import com.unitask.dao.AppUserDAO;
 import com.unitask.dao.StudentAssessmentDao;
@@ -89,6 +90,10 @@ public class AnnouncementServiceImpl extends ContextService implements Announcem
     public Page<AnnouncementTuple> list(PageRequest pageRequest) {
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Pageable pageable = PageUtil.pageable(pageRequest, Sort.by("postedDate").descending());
-        return announcementDAO.findListing(pageable, appUser.getId(), pageRequest.getSearch());
+        if (UserRole.LECTURER.equals(appUser.getUserRole())) {
+            return announcementDAO.findListing(pageable, appUser.getId(), pageRequest.getSearch());
+        } else {
+            return announcementDAO.findStudentListing(pageable, appUser.getId(), pageRequest.getSearch());
+        }
     }
 }

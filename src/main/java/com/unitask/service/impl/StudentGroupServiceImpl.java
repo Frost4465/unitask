@@ -11,27 +11,21 @@ import com.unitask.dto.group.GroupTuple;
 import com.unitask.entity.Group;
 import com.unitask.entity.StudentAssessment;
 import com.unitask.entity.User.AppUser;
-import com.unitask.entity.assessment.Assessment;
 import com.unitask.exception.ServiceAppException;
 import com.unitask.mapper.GroupMapper;
 import com.unitask.service.ContextService;
 import com.unitask.service.StudentGroupService;
 import com.unitask.util.OssUtil;
 import com.unitask.util.PageUtil;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class StudentGroupServiceImpl extends ContextService implements StudentGroupService {
@@ -126,8 +120,8 @@ public class StudentGroupServiceImpl extends ContextService implements StudentGr
         AppUser appUser = appUserDAO.findByEmail(getCurrentAuthUsername());
         Pageable pageable = PageUtil.pageable(pageRequest);
         List<StudentAssessment> studentAssessmentList = studentAssessmentDao.findByAppUserAndGroupNull(appUser.getId());
-        List<Long> assessmentId = studentAssessmentList.stream().map(StudentAssessment::getAssessment).map(Assessment::getId).distinct().toList();
-        return groupDao.findByAssessmentId(pageable, assessmentId, true);
+        List<Long> assessmentId = studentAssessmentList.stream().map(x -> x.getAssessment().getId()).distinct().toList();
+        return groupDao.findByAssessmentId(pageable, assessmentId, true, false);
     }
 
     @Override
